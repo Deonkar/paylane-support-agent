@@ -90,3 +90,18 @@ Run them all with `pnpm test` (offline, no keys).
 | | unavailable on a malformed answer (0–1 range enforced by Zod) | outside data is validated |
 | | unavailable on a missing answer and when unreachable | every failure path is handled |
 | | score answers come back as numbers | the grader can use the same client |
+
+## Task 9: Agent loop
+
+| File | Case | Proves |
+|---|---|---|
+| `test/agent/loop.test.ts` | tool round trip replays the model's raw content unchanged | Gemini thought signatures survive |
+| | two tool calls run in order, results return in one tool turn | parallel calls handled per the provider contract |
+| | a pasted card number never reaches the model | inbound redaction happens first |
+| | Jev starts before the model answers; its verdict is recorded before any tool runs | no added latency, deterministic traces |
+| | a Jev flag is sticky; a later refund in the chat stays blocked | conversation 11/12 behaviour |
+| | a blocked call's reason goes back to the model | the model learns why and can hand off |
+| | step limit → safe reply + handoff | no runaway loops, nobody stranded |
+| | model error → safe reply + handoff; empty reply treated as an error | R14 |
+| | an email in a reply is masked and recorded | outbound filter, visible to the eval |
+| | events emitted in trace order; turns counted across messages | the stream the UI and eval consume |
