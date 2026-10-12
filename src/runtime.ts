@@ -15,7 +15,8 @@ export const MAX_MODEL_CALLS = 6;
 
 /** Wires the agent once; every chat gets its own session and its own copy of the Paylane data. */
 export function createRuntime(config: Config, opts: { clock?: Clock; model?: ChatModel } = {}) {
-  const model = opts.model ?? createGeminiModel({ apiKey: config.geminiApiKey, model: config.geminiModel });
+  const model =
+    opts.model ?? createGeminiModel({ apiKey: config.geminiApiKey, model: config.geminiModel, rpm: config.geminiRpm });
   const jev = config.typesafeApiKey ? createJevClient({ apiKey: config.typesafeApiKey }) : null;
   const signals = createSignalClassifier(jev);
   const system = buildSystemPrompt();

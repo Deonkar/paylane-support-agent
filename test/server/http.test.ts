@@ -9,7 +9,7 @@ import { fixedClock } from "../../src/policy/clock.ts";
 import { createRuntime } from "../../src/runtime.ts";
 import { LIMITS, createAppServer } from "../../src/server/http.ts";
 
-const config = { geminiApiKey: "SECRET-GEMINI-KEY", geminiModel: "m", typesafeApiKey: null };
+const config = { geminiApiKey: "SECRET-GEMINI-KEY", geminiModel: "m", geminiRpm: 14, typesafeApiKey: null };
 let close: () => void = () => undefined;
 
 async function start(steps = [says("hello")], staticDir?: string) {

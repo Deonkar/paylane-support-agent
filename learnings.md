@@ -44,3 +44,10 @@ surprises you.
   Reject decoded paths containing `..` explicitly instead of relying on normalisation.
 - `erasableSyntaxOnly` forbids constructor parameter properties (`constructor(readonly status: number)`);
   declare the field and assign it.
+
+## Eval
+
+- **The first full eval hit 429 RESOURCE_EXHAUSTED: 15 requests/minute per model on the free tier.** The SDK's
+  short retries can't wait out a per-minute window, so the agent's safe fallback (reply + handoff) fired in
+  a third of runs: correct behaviour, useless measurement. Fixed with a sliding-window limiter (`GEMINI_RPM`,
+  default 14). Lesson: a cut "you won't need it" component came back once real traffic arrived.
