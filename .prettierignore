@@ -1,0 +1,8 @@
+node_modules
+coverage
+web/dist
+runs
+.spike
+pnpm-lock.yaml
+.impeccable
+eval/results
