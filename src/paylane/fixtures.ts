@@ -28,7 +28,14 @@ function t(
   status: TransactionRecord["status"] = "settled",
   fault?: "processor_unavailable",
 ): TransactionFixture {
-  return { id, amount_cents: Math.round(dollars * 100), merchant, daysAgo, status, ...(fault ? { fault } : {}) };
+  return {
+    id,
+    amount_cents: Math.round(dollars * 100),
+    merchant,
+    daysAgo,
+    status,
+    ...(fault ? { fault } : {}),
+  };
 }
 
 /** Every customer is invented for testing. Customer n is the one conversation n is written for. */

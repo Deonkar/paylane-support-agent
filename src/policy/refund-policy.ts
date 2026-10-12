@@ -25,13 +25,17 @@ export type RefundBlockReason =
 export type NextStep = "verify" | "check_id" | "hand_off" | "explain";
 
 export type RefundDecision =
-  | { allow: true }
-  | { allow: false; reason: RefundBlockReason; rule: RuleId; next: NextStep };
+  { allow: true } | { allow: false; reason: RefundBlockReason; rule: RuleId; next: NextStep };
 
 export interface RefundContext {
   verified: boolean;
   customer: { id: string; status: "active" | "frozen" } | null;
-  txn: { customerId: string; amountCents: number; date: string; status: "settled" | "pending" | "refunded" } | null;
+  txn: {
+    customerId: string;
+    amountCents: number;
+    date: string;
+    status: "settled" | "pending" | "refunded";
+  } | null;
   requestedCents: number;
   today: string;
   /** Sticky for the chat once Jev flags it. */

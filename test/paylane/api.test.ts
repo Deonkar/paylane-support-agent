@@ -63,7 +63,10 @@ describe("get_transaction", () => {
 
 describe("issue_refund", () => {
   it("refunds once and marks the transaction refunded", async () => {
-    expect(await api.issue_refund({ txn_id: "txn_1001", amount: 42.5 })).toEqual({ ok: true, refund_id: "rf_0001" });
+    expect(await api.issue_refund({ txn_id: "txn_1001", amount: 42.5 })).toEqual({
+      ok: true,
+      refund_id: "rf_0001",
+    });
     expect(await api.get_transaction({ customer_id: "cus_01", txn_id: "txn_1001" })).toMatchObject({
       status: "refunded",
     });

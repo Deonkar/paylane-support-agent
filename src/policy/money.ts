@@ -26,3 +26,8 @@ const usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" 
 export function formatUsd(cents: number): string {
   return usd.format(cents / 100);
 }
+
+/** "$75" rather than "$75.00" for round amounts in prose; keeps cents when there are any. */
+export function formatUsdShort(cents: number): string {
+  return formatUsd(cents).replace(/\.00$/, "");
+}
