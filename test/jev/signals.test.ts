@@ -39,10 +39,11 @@ describe("signal classifier", () => {
   });
 
   it("sends the pinned model, an object state and all four questions", async () => {
-    const fetch = vi.fn((_url: string, _init?: RequestInit) => Promise.resolve(jevResponse(QUIET)));
+    const fetch = vi.fn((_url: string | URL | Request, _init?: RequestInit) => Promise.resolve(jevResponse(QUIET)));
     const { classifier } = classifierWith(fetch);
     await classifier.classify(CONVO);
-    const body: unknown = JSON.parse(String(fetch.mock.calls[0]?.[1]?.body));
+    const sent = fetch.mock.calls[0]?.[1]?.body;
+    const body: unknown = JSON.parse(typeof sent === "string" ? sent : "{}");
     expect(body).toMatchObject({ model: JEV_MODEL, state: { conversation: CONVO } });
     expect(Object.keys((body as { questions: object }).questions).sort()).toEqual(Object.keys(SIGNAL_QUESTIONS).sort());
   });
