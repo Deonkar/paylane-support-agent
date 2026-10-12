@@ -5,14 +5,24 @@ import { SIGNAL_QUESTIONS, createSignalClassifier } from "../../src/jev/signals.
 type Readings = Record<keyof typeof SIGNAL_QUESTIONS, number>;
 
 function jevResponse(readings: Partial<Readings>, status = 200): Response {
-  const answers = Object.fromEntries(Object.entries(readings).map(([k, v]) => [k, { type: "noul", noul: v }]));
-  return new Response(JSON.stringify({ model: "jev-1.13.0", answers, usage: { input_tokens: 1, output_tokens: 1 } }), {
-    status,
-    headers: { "content-type": "application/json" },
-  });
+  const answers = Object.fromEntries(
+    Object.entries(readings).map(([k, v]) => [k, { type: "noul", noul: v }]),
+  );
+  return new Response(
+    JSON.stringify({ model: "jev-1.13.0", answers, usage: { input_tokens: 1, output_tokens: 1 } }),
+    {
+      status,
+      headers: { "content-type": "application/json" },
+    },
+  );
 }
 
-const QUIET: Readings = { fraud_report: 0.02, legal_threat: 0.03, closure_request: 0.01, override_attempt: 0.04 };
+const QUIET: Readings = {
+  fraud_report: 0.02,
+  legal_threat: 0.03,
+  closure_request: 0.01,
+  override_attempt: 0.04,
+};
 const CONVO = [{ from: "customer" as const, text: "Someone used my card for $640 I didn't spend." }];
 
 function classifierWith(fetch: typeof globalThis.fetch, timeoutMs?: number) {
@@ -23,7 +33,11 @@ function classifierWith(fetch: typeof globalThis.fetch, timeoutMs?: number) {
 
 describe("signal classifier", () => {
   it("is off, with no request, when no key is configured", async () => {
-    expect(await createSignalClassifier(null).classify(CONVO)).toEqual({ status: "off", readings: null, flagged: [] });
+    expect(await createSignalClassifier(null).classify(CONVO)).toEqual({
+      status: "off",
+      readings: null,
+      flagged: [],
+    });
   });
 
   it("returns the four readings and flags nothing below the threshold", async () => {
@@ -39,18 +53,24 @@ describe("signal classifier", () => {
   });
 
   it("sends the pinned model, an object state and all four questions", async () => {
-    const fetch = vi.fn((_url: string | URL | Request, _init?: RequestInit) => Promise.resolve(jevResponse(QUIET)));
+    const fetch = vi.fn((_url: string | URL | Request, _init?: RequestInit) =>
+      Promise.resolve(jevResponse(QUIET)),
+    );
     const { classifier } = classifierWith(fetch);
     await classifier.classify(CONVO);
     const sent = fetch.mock.calls[0]?.[1]?.body;
     const body: unknown = JSON.parse(typeof sent === "string" ? sent : "{}");
     expect(body).toMatchObject({ model: JEV_MODEL, state: { conversation: CONVO } });
-    expect(Object.keys((body as { questions: object }).questions).sort()).toEqual(Object.keys(SIGNAL_QUESTIONS).sort());
+    expect(Object.keys((body as { questions: object }).questions).sort()).toEqual(
+      Object.keys(SIGNAL_QUESTIONS).sort(),
+    );
   });
 
   it("is unavailable, with a warning, when Jev keeps answering 429", async () => {
     const fetch = vi.fn(() =>
-      Promise.resolve(new Response('{"error":"rate limited"}', { status: 429, headers: { "retry-after": "0" } })),
+      Promise.resolve(
+        new Response('{"error":"rate limited"}', { status: 429, headers: { "retry-after": "0" } }),
+      ),
     );
     const { classifier, warn } = classifierWith(fetch);
     expect(await classifier.classify(CONVO)).toEqual({ status: "unavailable", readings: null, flagged: [] });
@@ -58,7 +78,9 @@ describe("signal classifier", () => {
   });
 
   it("is unavailable when an answer is malformed", async () => {
-    const { classifier } = classifierWith(vi.fn(() => Promise.resolve(jevResponse({ ...QUIET, fraud_report: 7 }))));
+    const { classifier } = classifierWith(
+      vi.fn(() => Promise.resolve(jevResponse({ ...QUIET, fraud_report: 7 }))),
+    );
     expect((await classifier.classify(CONVO)).status).toBe("unavailable");
   });
 
@@ -78,13 +100,24 @@ describe("jev client", () => {
   it("returns score values for score questions", async () => {
     const fetch = vi.fn(() =>
       Promise.resolve(
-        new Response(JSON.stringify({ model: "jev-1.13.0", answers: { tone: { type: "score", score: 1.7, legend: {}, probabilities: {}, confidence: 0.8 } }, usage: { input_tokens: 1, output_tokens: 1 } }), {
-          status: 200,
-          headers: { "content-type": "application/json" },
-        }),
+        new Response(
+          JSON.stringify({
+            model: "jev-1.13.0",
+            answers: { tone: { type: "score", score: 1.7, legend: {}, probabilities: {}, confidence: 0.8 } },
+            usage: { input_tokens: 1, output_tokens: 1 },
+          }),
+          {
+            status: 200,
+            headers: { "content-type": "application/json" },
+          },
+        ),
       ),
     );
     const jev = createJevClient({ apiKey: "k", fetch, warn: vi.fn() });
-    expect(await jev.ask("hi", { tone: { type: "score", instructions: "How warm?", criteria: ["cold", "ok", "warm"] } })).toEqual({ tone: 1.7 });
+    expect(
+      await jev.ask("hi", {
+        tone: { type: "score", instructions: "How warm?", criteria: ["cold", "ok", "warm"] },
+      }),
+    ).toEqual({ tone: 1.7 });
   });
 });
