@@ -4,6 +4,8 @@
 > stated on purpose: steps name the tests to write first and the exact interfaces, instead of pasting every
 > line of code twice. The interfaces below are the contract between tasks; the tests are the specification.
 
+> **Status:** done. Tasks 18 and 19 (design finish, Playwright/axe) and the `qa:docs` battery were cut at the owner's request; 20a and 20b were added after the first live eval. Each task shipped as one squash-merged PR.
+
 **Goal:** the agent, tools, eval and UI described in [spec.md](spec.md), shipped as a public repo with CI.
 
 **Architecture:** the model talks, Jev judges, the code decides. A tool gateway enforces every checkable

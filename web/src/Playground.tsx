@@ -46,7 +46,12 @@ export function Playground() {
     setEvents([]);
     setSelected(null);
     setError(null);
-    setSessionId(await newSession().catch(() => null));
+    try {
+      setSessionId(await newSession());
+    } catch (err) {
+      setSessionId(null);
+      setError(`Couldn't start a chat: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
 
   async function submit(e: SyntheticEvent) {
