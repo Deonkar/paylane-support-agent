@@ -11,7 +11,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint .",
-    "typecheck": "tsc -p tsconfig.json && tsc -p web/tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json && tsc -p web/tsconfig.json && tsc -p e2e/tsconfig.json",
     "format": "prettier --write .",
     "check": "pnpm lint && pnpm typecheck && pnpm test",
     "audit": "pnpm audit --prod",
@@ -21,7 +21,8 @@
     "playground": "pnpm build && node src/cli/playground.ts",
     "build": "vite build web",
     "dev:web": "vite web",
-    "jev": "node src/cli/jev.ts"
+    "jev": "node src/cli/jev.ts",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@fontsource-variable/public-sans": "5.3.0",
@@ -33,7 +34,9 @@
     "zod": "4.6.6"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.0",
     "@testing-library/react": "16.3.3",
     "@types/node": "24.19.2",
     "@types/react": "19.3.0",
