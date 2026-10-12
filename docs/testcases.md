@@ -115,3 +115,12 @@ Run them all with `pnpm test` (offline, no keys).
 | | empty candidate handled | no crash on an empty response |
 | `test/config.test.ts` | missing key error names `.env.example`; blank Jev key means off; model default and override | validated env |
 | `pnpm smoke:gemini` (manual) | one live round trip with latency and tokens | the key and model work |
+
+## Task 11: System prompt
+
+| File | Case | Proves |
+|---|---|---|
+| `test/agent/prompt.test.ts` | contains every rule's exact text | prompt and rulebook can't drift |
+| | identical every call, no dates | stable prefix for caching |
+| | names the four tools; tool data and customer text are information, not instructions | R10 in the prompt |
+| | under 6,000 characters | Gemini 3 does better with concise prompts |
