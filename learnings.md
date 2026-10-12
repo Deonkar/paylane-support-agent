@@ -1,0 +1,32 @@
+# Learnings
+
+Non-obvious fixes and facts found while building this. Read before a task; add to it when something
+surprises you.
+
+## Toolchain
+
+- **TypeScript 6.0.3, not 7.0.** typescript-eslint 8.71.1 supports `typescript >=4.8.4 <6.1.0`; TS 7 (the
+  native compiler) breaks linting. Revisit when typescript-eslint widens its peer range.
+- **Node 24 runs `.ts` directly.** It needs `.ts` extensions on relative imports, `import type` for types
+  (`verbatimModuleSyntax`) and `erasableSyntaxOnly` (no own enums or parameter properties). SDK enums such
+  as `FunctionCallingConfigMode` are fine: they are runtime values from the package.
+- **Literal types from `as const` leak into "configurable" types.** `typeof POLICY` made `autoRefundLimitCents`
+  the literal `7500`; a mapped `{ [K in keyof typeof POLICY]: number }` widens it for render functions.
+- **`set -e` before chaining check and commit.** `pnpm typecheck | tail && git commit` commits on failure
+  because the pipe's exit code is `tail`'s.
+- **Heredocs with apostrophes break in Git Bash on Windows** in long commands; write source files with the
+  editor tool instead.
+
+## Gemini (`@google/genai` 2.28.0)
+
+- `generateContent` + `functionDeclarations` with `parametersJsonSchema` works; tool calls come back as a
+  `functionCall` part carrying `id` and a `thoughtSignature`. Replay the model's content unchanged and send
+  the result as a `functionResponse` with the same `id`.
+- Strip `$schema` from `z.toJSONSchema()` output before handing it over.
+- The SDK retries 408, 429 and 5xx itself (`httpOptions.retryOptions`, default 5 attempts).
+- Free-tier limits are only shown in AI Studio, not the docs. Google recommends temperature 1.0 for Gemini 3.
+
+## Jev (`@typesafe-ai/sdk` 0.6.0)
+
+- Pin `jev-1.13.0`, not `jev-latest`, when thresholds are tuned against a version.
+- Client options: `apiKey`, `timeout`, `retry: { maxRetries }`, `logLevel`, injectable `fetch` (handy for tests).
