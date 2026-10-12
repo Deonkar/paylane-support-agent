@@ -187,3 +187,11 @@ Run them all with `pnpm test` (offline, no keys).
 | Browser, 349 px | report and detail readable on a phone | mobile width |
 | `report.json` parsed with Zod in the browser | malformed or missing data shows the "run pnpm eval" empty state | outside data validated in the UI too |
 | `.github/workflows/pages.yml` | builds `web/` with the committed results and deploys to GitHub Pages | reviewers browse results with no setup |
+
+## Task 20a: Gemini rate limiter (found by the first live eval)
+
+| File | Case | Proves |
+|---|---|---|
+| `test/llm/rate-limit.test.ts` | N calls pass per minute, the next waits until the window slides | free-tier 15/min is never exceeded |
+| | queued callers are served in order | no starvation or reordering |
+| `test/config.test.ts` | blank `GEMINI_MODEL` / `GEMINI_RPM` from a copied `.env.example` use defaults; RPM 0 rejected | config can't be broken by the template |

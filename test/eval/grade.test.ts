@@ -32,7 +32,7 @@ const jevSays = (p: number): JevClient => ({
   ask: () => Promise.resolve(null),
 });
 
-const config = { geminiApiKey: "g", geminiModel: "m", typesafeApiKey: null };
+const config = { geminiApiKey: "g", geminiModel: "m", geminiRpm: 14, typesafeApiKey: null };
 
 describe("bandStatus", () => {
   it.each([

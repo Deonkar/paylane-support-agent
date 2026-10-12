@@ -6,6 +6,7 @@ import {
   GoogleGenAI,
   ThinkingLevel,
 } from "@google/genai";
+import { createRateLimiter } from "./rate-limit.ts";
 import type { ChatModel, ToolCall, Turn } from "./types.ts";
 
 type Generate = (params: GenerateContentParameters) => Promise<GenerateContentResponse>;
@@ -34,8 +35,11 @@ export function createGeminiModel(opts: {
   apiKey: string;
   model: string;
   thinking?: ThinkingLevel;
+  /** Requests per minute; the free tier allows 15 per model. */
+  rpm?: number;
   generate?: Generate;
 }): ChatModel {
+  const acquire = createRateLimiter(opts.rpm ?? 14);
   const generate: Generate =
     opts.generate ??
     ((p) =>
@@ -47,6 +51,7 @@ export function createGeminiModel(opts: {
   return {
     name: opts.model,
     async generate({ system, tools, history }) {
+      await acquire();
       const res = await generate({
         model: opts.model,
         contents: toContents(history),

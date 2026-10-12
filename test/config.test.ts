@@ -10,6 +10,7 @@ describe("config", () => {
     expect(parseConfig({ GEMINI_API_KEY: "g", TYPESAFE_API_KEY: " " })).toEqual({
       geminiApiKey: "g",
       geminiModel: "gemini-3.5-flash-lite",
+      geminiRpm: 14,
       typesafeApiKey: null,
     });
   });
@@ -21,5 +22,13 @@ describe("config", () => {
         typesafeApiKey: "t",
       },
     );
+  });
+
+  it("treats blank lines copied from .env.example as defaults, and rejects a bad RPM", () => {
+    expect(parseConfig({ GEMINI_API_KEY: "g", GEMINI_MODEL: "", GEMINI_RPM: "" })).toMatchObject({
+      geminiModel: "gemini-3.5-flash-lite",
+      geminiRpm: 14,
+    });
+    expect(() => parseConfig({ GEMINI_API_KEY: "g", GEMINI_RPM: "0" })).toThrow();
   });
 });

@@ -4,7 +4,7 @@ import { calls, says, scriptedModel } from "../src/llm/scripted.ts";
 import { fixedClock } from "../src/policy/clock.ts";
 import { createRuntime } from "../src/runtime.ts";
 
-const config = { geminiApiKey: "g", geminiModel: "m", typesafeApiKey: null };
+const config = { geminiApiKey: "g", geminiModel: "m", geminiRpm: 14, typesafeApiKey: null };
 
 describe("runtime", () => {
   it("gives each chat its own data, so a refund in one never shows in another", async () => {
