@@ -244,3 +244,9 @@ the current conversation from the URL).
 | Built UI, same questions as the direction round (`.impeccable/jev/built-ui.*`) | fit 0.59 (proposed 0.76), looks generic 0.35 (proposed 0.45, the watch-point, improved), clear to a support head 0.71 (0.83), gimmicky 0.33 (0.22). Mixed: likely the raw JSON in the Why panel; recorded, not chased, per the "keep the UI simple" call |
 | README | explains how to run it 0.98, edge cases and why 0.95, failure and fix 0.99, claims without evidence 0.44 (uncertain) |
 | `docs/questions.md` | answerable in one or two sentences 0.87, each states the assumption made 0.97 |
+
+## Task 20c: Never grade a run where the model failed
+
+| File | Case | Proves |
+|---|---|---|
+| `test/eval/grade.test.ts` | a run whose model call fails stops the eval and saves nothing; a rerun resumes it | quota errors and outages can't be graded as agent behaviour again |

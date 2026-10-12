@@ -48,6 +48,13 @@ export async function runAll(
         continue;
       }
       const record = await runScenario(s, runtime, k);
+      // A run where the model itself failed (quota, outage) measures the provider, not the agent: never save or
+      // grade it. Stop here; rerunning resumes from this run once the model is back.
+      if (record.events.some((e) => e.type === "fallback" && e.reason === "model_error")) {
+        throw new Error(
+          `${s.id}.${k}: the model call failed (quota or outage), so the run was not saved. Rerun to resume.`,
+        );
+      }
       writeFileSync(file, JSON.stringify(record, null, 2));
       records.push(record);
       log(`${s.id}.${k} done`);
