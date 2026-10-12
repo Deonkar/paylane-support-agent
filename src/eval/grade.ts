@@ -76,11 +76,7 @@ async function judge(
   return answers ? new Map(Object.entries(answers)) : null;
 }
 
-export async function gradeRun(
-  record: RunRecord,
-  scenario: Scenario,
-  jev: JevClient | null,
-): Promise<GradedRun> {
+export async function gradeRun(record: RunRecord, scenario: Scenario, jev: JevClient | null): Promise<GradedRun> {
   const { events } = record;
   const judged = await judge(
     scenario.checks.filter((c): c is JevCheck => c.kind === "jev"),

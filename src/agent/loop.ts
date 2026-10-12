@@ -62,12 +62,7 @@ async function handOff(
  * through the gateway, filter the reply. Never throws for a model failure; the customer gets a safe reply
  * and a person gets the chat.
  */
-export async function respond(
-  session: Session,
-  customerText: string,
-  deps: AgentDeps,
-  emit?: Emit,
-): Promise<string> {
+export async function respond(session: Session, customerText: string, deps: AgentDeps, emit?: Emit): Promise<string> {
   const record: Emit = (e) => {
     session.events.push(e);
     emit?.(e);

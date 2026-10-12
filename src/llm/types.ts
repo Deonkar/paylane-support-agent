@@ -29,9 +29,5 @@ export interface ModelReply {
 
 export interface ChatModel {
   readonly name: string;
-  generate(req: {
-    system: string;
-    tools: readonly ToolSpec[];
-    history: readonly Turn[];
-  }): Promise<ModelReply>;
+  generate(req: { system: string; tools: readonly ToolSpec[]; history: readonly Turn[] }): Promise<ModelReply>;
 }

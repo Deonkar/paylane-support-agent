@@ -103,11 +103,7 @@ describe("respond", () => {
     const flagged: SignalClassifier = {
       classify: () => Promise.resolve({ status: "ok", readings: null, flagged: ["fraud"] }),
     };
-    await respond(
-      session,
-      "someone stole my card",
-      deps(scriptedModel([says("I'll get a person.")]), flagged),
-    );
+    await respond(session, "someone stole my card", deps(scriptedModel([says("I'll get a person.")]), flagged));
     expect(session.handoff).toBe("fraud");
     const quiet: SignalClassifier = {
       classify: () => Promise.resolve({ status: "ok", readings: null, flagged: [] }),
@@ -145,18 +141,14 @@ describe("respond", () => {
     const reply = await respond(session, "hi", deps(model));
     expect(reply).toBe(FALLBACK_REPLY);
     expect(model.requests).toHaveLength(6);
-    expect(session.events).toContainEqual(
-      expect.objectContaining({ type: "fallback", reason: "step_limit" }),
-    );
+    expect(session.events).toContainEqual(expect.objectContaining({ type: "fallback", reason: "step_limit" }));
     expect(session.ticketId).toBe("tk_0001");
   });
 
   it("hands off with a safe reply when the model errors", async () => {
     const reply = await respond(session, "hi", deps(scriptedModel([new Error("503 overloaded")])));
     expect(reply).toBe(FALLBACK_REPLY);
-    expect(session.events).toContainEqual(
-      expect.objectContaining({ type: "fallback", reason: "model_error" }),
-    );
+    expect(session.events).toContainEqual(expect.objectContaining({ type: "fallback", reason: "model_error" }));
     expect(session.ticketId).not.toBeNull();
   });
 
@@ -166,11 +158,7 @@ describe("respond", () => {
   });
 
   it("masks an email the model writes, and records it", async () => {
-    const reply = await respond(
-      session,
-      "hi",
-      deps(scriptedModel([says("Is marcus.hill@example.com right?")])),
-    );
+    const reply = await respond(session, "hi", deps(scriptedModel([says("Is marcus.hill@example.com right?")])));
     expect(reply).toBe("Is m•••@example.com right?");
     expect(session.events.at(-1)).toMatchObject({ type: "agent_message", masked: 1 });
   });

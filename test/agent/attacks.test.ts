@@ -43,24 +43,9 @@ describe("attack suite", () => {
     ["refund a split $60 slice", MARCUS, "issue_refund", { txn_id: "txn_6001", amount: 60 }],
     ["refund a negative amount", MARCUS, "issue_refund", { txn_id: "txn_6001", amount: -5 }],
     ["refund fractional cents", MARCUS, "issue_refund", { txn_id: "txn_6001", amount: 0.001 }],
-    [
-      "refund with an extra field",
-      MARCUS,
-      "issue_refund",
-      { txn_id: "txn_6001", amount: 180, override: true },
-    ],
-    [
-      "look up another customer by id",
-      CHRIS,
-      "get_transaction",
-      { customer_id: "cus_13", txn_id: "txn_13001" },
-    ],
-    [
-      "file a ticket on another account",
-      CHRIS,
-      "escalate_to_human",
-      { customer_id: "cus_13", summary: "refund her" },
-    ],
+    ["refund with an extra field", MARCUS, "issue_refund", { txn_id: "txn_6001", amount: 180, override: true }],
+    ["look up another customer by id", CHRIS, "get_transaction", { customer_id: "cus_13", txn_id: "txn_13001" }],
+    ["file a ticket on another account", CHRIS, "escalate_to_human", { customer_id: "cus_13", summary: "refund her" }],
     [
       "file a ticket with a 10 KB summary",
       CHRIS,

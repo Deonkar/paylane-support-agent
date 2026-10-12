@@ -58,11 +58,7 @@ interface Outcome {
 }
 
 const ok = (result: Record<string, unknown>): Outcome => ({ result, outcome: "ok", block: null });
-const blocked = (
-  reason: string,
-  rule: RuleId,
-  result: Record<string, unknown> = { error: reason, rule },
-): Outcome => ({
+const blocked = (reason: string, rule: RuleId, result: Record<string, unknown> = { error: reason, rule }): Outcome => ({
   result,
   outcome: "blocked",
   block: { reason, rule },
@@ -75,19 +71,14 @@ function sameDigits(a: string, b: string): boolean {
   return x.length === y.length && timingSafeEqual(x, y);
 }
 
-async function getCustomer(
-  s: Session,
-  a: z.infer<typeof ARGS.get_customer>,
-  d: GatewayDeps,
-): Promise<Outcome> {
+async function getCustomer(s: Session, a: z.infer<typeof ARGS.get_customer>, d: GatewayDeps): Promise<Outcome> {
   const email = a.email.trim().toLowerCase();
   if (s.verified) {
     if (s.verified.email !== email) return blocked("already_verified", "R3");
     const { id: cid, name, status } = s.verified;
     return ok({ verified: true, id: cid, name, status });
   }
-  if (s.failedVerifications >= POLICY.maxVerifyAttempts)
-    return ok({ verified: false, error: "verification_locked" });
+  if (s.failedVerifications >= POLICY.maxVerifyAttempts) return ok({ verified: false, error: "verification_locked" });
   const found = await d.api.get_customer({ email });
   // An unknown email and wrong digits get the same answer, so the agent can't reveal which emails exist.
   if ("error" in found || !sameDigits(found.card_last4, a.card_last4)) {
@@ -122,9 +113,7 @@ function refundContext(
   return {
     verified: s.verified !== null,
     customer: s.verified ? { id: s.verified.id, status: s.verified.status } : null,
-    txn: txn
-      ? { customerId: txn.customerId, amountCents: txn.amountCents, date: txn.date, status: txn.status }
-      : null,
+    txn: txn ? { customerId: txn.customerId, amountCents: txn.amountCents, date: txn.date, status: txn.status } : null,
     requestedCents,
     today: d.clock.today(),
     handoff: s.handoff,
@@ -132,11 +121,7 @@ function refundContext(
   };
 }
 
-async function getTransaction(
-  s: Session,
-  a: z.infer<typeof ARGS.get_transaction>,
-  d: GatewayDeps,
-): Promise<Outcome> {
+async function getTransaction(s: Session, a: z.infer<typeof ARGS.get_transaction>, d: GatewayDeps): Promise<Outcome> {
   if (!s.verified) return blocked("not_verified", "R1");
   if (a.customer_id !== s.verified.id) return blocked("wrong_customer", "R3");
   const txn = await loadTxn(s, a.txn_id, d);
@@ -160,11 +145,7 @@ async function getTransaction(
   });
 }
 
-async function issueRefund(
-  s: Session,
-  a: z.infer<typeof ARGS.issue_refund>,
-  d: GatewayDeps,
-): Promise<Outcome> {
+async function issueRefund(s: Session, a: z.infer<typeof ARGS.issue_refund>, d: GatewayDeps): Promise<Outcome> {
   const requested = parseDollars(a.amount);
   if (!requested.ok) return error({ error: "invalid_amount", detail: requested.reason });
   const txn = await loadTxn(s, a.txn_id, d);
@@ -180,11 +161,7 @@ async function issueRefund(
   return ok(await d.api.issue_refund({ txn_id: a.txn_id, amount: centsToDollars(requested.cents) }));
 }
 
-async function escalate(
-  s: Session,
-  a: z.infer<typeof ARGS.escalate_to_human>,
-  d: GatewayDeps,
-): Promise<Outcome> {
+async function escalate(s: Session, a: z.infer<typeof ARGS.escalate_to_human>, d: GatewayDeps): Promise<Outcome> {
   const owner = s.verified?.id ?? null;
   if (a.customer_id !== null && a.customer_id !== owner) return blocked("wrong_customer", "R3");
   if (s.ticketId) return ok({ ticket_id: s.ticketId });
