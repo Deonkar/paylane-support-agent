@@ -56,7 +56,7 @@ rules.
   tickets, masked output.
 - Eval data: 12 conversations × 3 runs; each check is pass, fail or needs review; checks are deterministic or
   Jev-graded; latency and tokens per conversation.
-- Terms used throughout: "hand off" (to a person), "refund", "verified", rule ids R1 to R13, shared checks S1
+- Terms used throughout: "hand off" (to a person), "refund", "verified", rule ids R1 to R14, shared checks S1
   to S6 plus per-conversation checks.
 - API keys never reach the browser. The Playground runs only on the local machine.
 
