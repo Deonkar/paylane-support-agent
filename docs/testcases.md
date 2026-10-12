@@ -144,3 +144,15 @@ Run them all with `pnpm test` (offline, no keys).
 | | 12 scenarios, unique ids, real customers, 2–5 turns, a written reason each | the conversation set's integrity |
 | | six shared checks plus at least two own per scenario; unique check ids | every conversation is graded on both |
 | | every rule R1–R14 is cited by some check | no rule goes untested |
+
+## Task 14: Eval runner, grading and report
+
+| File | Case | Proves |
+|---|---|---|
+| `test/eval/grade.test.ts` | Jev bands: below 0.2 is "no", above 0.8 "yes", between is review | judged checks have three outcomes, not a forced binary |
+| | runs, saves one trace per run, reuses a saved trace on rerun | a quota error never loses work |
+| | a correct conversation 01 grades as pass | the checks agree with good behaviour |
+| | with Jev off, judged checks are "review"; a failed code check cites its transcript line | honest grading without a key; findable failures |
+| | summary: passed every run, per-run passes, review count, latency percentiles | the headline numbers |
+| | report and transcripts name each failure with its lines | readable output |
+| `pnpm eval --repeat 1 --only 06` (manual, live) | angry split-refund: all policy checks pass; tone fails (Jev 0.18) | the pipeline finds real failures |

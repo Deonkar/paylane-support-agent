@@ -16,7 +16,8 @@
     "check": "pnpm lint && pnpm typecheck && pnpm test",
     "audit": "pnpm audit --prod",
     "smoke:gemini": "node scripts/smoke-gemini.ts",
-    "chat": "node src/cli/chat.ts"
+    "chat": "node src/cli/chat.ts",
+    "eval": "node src/cli/eval.ts"
   },
   "dependencies": {
     "@google/genai": "2.28.0",
