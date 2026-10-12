@@ -15,7 +15,8 @@
     "format": "prettier --write .",
     "check": "pnpm lint && pnpm typecheck && pnpm test",
     "audit": "pnpm audit --prod",
-    "smoke:gemini": "node scripts/smoke-gemini.ts"
+    "smoke:gemini": "node scripts/smoke-gemini.ts",
+    "chat": "node src/cli/chat.ts"
   },
   "dependencies": {
     "@google/genai": "2.28.0",
