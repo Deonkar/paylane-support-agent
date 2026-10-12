@@ -131,3 +131,16 @@ Run them all with `pnpm test` (offline, no keys).
 |---|---|---|
 | `test/runtime.test.ts` | each chat gets its own Paylane data; the same refund succeeds in two chats | chats and eval runs never contaminate each other |
 | `pnpm chat 01` (manual, live) | eligible $42.50 refund: verified → looked up → one refund → refund id told to the customer | the whole stack works against real Gemini and Jev |
+
+## Task 13: Scenarios and checks
+
+| File | Case | Proves |
+|---|---|---|
+| `test/eval/checks.test.ts` | S1–S4 each pass on a clean trace and fail on a violating one | the shared checks catch what they claim |
+| | S5 and S6 are Jev questions | tone and false promises are judged, not regex'd |
+| | refunded wants one exact refund; noRefund ignores blocked attempts; handedOff checks ticket and summary; notHandedOff; noHandoffBeforeTurn; atMostRefundAttempts; untouched | each per-conversation check works in both directions |
+| | Jev signal checks skip (pass, labelled) when Jev was off | runs without a Jev key stay honest |
+| | failing events map to transcript line numbers | checks cite lines a reader can find |
+| | 12 scenarios, unique ids, real customers, 2–5 turns, a written reason each | the conversation set's integrity |
+| | six shared checks plus at least two own per scenario; unique check ids | every conversation is graded on both |
+| | every rule R1–R14 is cited by some check | no rule goes untested |
