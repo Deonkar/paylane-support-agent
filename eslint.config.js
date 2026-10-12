@@ -31,5 +31,6 @@ export default tseslint.config(
       eqeqeq: "error",
     },
   },
+  { files: ["web/src/**/*.tsx", "web/src/**/*.ts"], languageOptions: { globals: { ...globals.browser } } },
   { files: ["**/*.js"], ...tseslint.configs.disableTypeChecked },
 );

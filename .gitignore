@@ -14,3 +14,7 @@ runs/
 # Throwaway SDK experiments
 
 .spike/
+
+# Local editor/agent settings
+.claude/
+web/dist/
