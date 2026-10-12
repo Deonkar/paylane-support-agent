@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Paylane support agent: the model talks, Jev judges, the code decides",
+    "output": "docs/architecture.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/Deonkar/paylane-support-agent.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "a68312485db4d23f9191e98b93400fdbd3443f90"
+    }
+  },
+  "components": [
+    {
+      "id": "customer",
+      "type": "external",
+      "label": "Customer / tester",
+      "sublabel": "browser",
+      "pos": [40, 300],
+      "size": [130, 64]
+    },
+    {
+      "id": "playground",
+      "type": "frontend",
+      "label": "Playground UI",
+      "sublabel": "React + Vite",
+      "pos": [250, 300],
+      "size": [150, 64],
+      "sources": [{ "path": "web/src/Playground.tsx", "line": 18, "label": "Playground screen" }]
+    },
+    {
+      "id": "server",
+      "type": "backend",
+      "label": "Local server",
+      "sublabel": "node:http, 127.0.0.1",
+      "pos": [520, 300],
+      "size": [150, 64],
+      "tag": "keys stay here",
+      "sources": [{ "path": "src/server/http.ts", "line": 114, "label": "createAppServer" }]
+    },
+    {
+      "id": "loop",
+      "type": "backend",
+      "label": "Agent loop",
+      "sublabel": "redact, judge, act",
+      "pos": [790, 300],
+      "size": [150, 64],
+      "sources": [
+        { "path": "src/agent/loop.ts", "line": 68, "label": "respond()" },
+        { "path": "src/agent/loop.ts", "line": 75, "label": "card redaction" }
+      ]
+    },
+    {
+      "id": "gemini",
+      "type": "cloud",
+      "label": "Gemini",
+      "sublabel": "3.5-flash-lite, 14 rpm",
+      "pos": [1080, 300],
+      "size": [150, 64],
+      "sources": [{ "path": "src/llm/gemini.ts", "line": 34, "label": "createGeminiModel" }]
+    },
+    {
+      "id": "report",
+      "type": "frontend",
+      "label": "Eval report",
+      "sublabel": "static, GitHub Pages",
+      "pos": [250, 110],
+      "size": [150, 64],
+      "sources": [{ "path": "web/src/Report.tsx", "line": 70, "label": "Report screen" }]
+    },
+    {
+      "id": "eval",
+      "type": "backend",
+      "label": "Eval runner",
+      "sublabel": "12 scenarios x 3",
+      "pos": [520, 110],
+      "size": [150, 64],
+      "sources": [
+        { "path": "src/eval/run.ts", "line": 33, "label": "runAll" },
+        { "path": "src/eval/grade.ts", "line": 79, "label": "gradeRun" }
+      ]
+    },
+    {
+      "id": "jev",
+      "type": "cloud",
+      "label": "Jev (TypeSafe)",
+      "sublabel": "calibrated yes/no",
+      "pos": [790, 110],
+      "size": [150, 64],
+      "sources": [{ "path": "src/jev/signals.ts", "line": 73, "label": "trigger signals" }]
+    },
+    {
+      "id": "policy",
+      "type": "security",
+      "label": "Refund policy",
+      "sublabel": "decideRefund, pure",
+      "pos": [520, 490],
+      "size": [150, 64],
+      "sources": [{ "path": "src/policy/refund-policy.ts", "line": 86, "label": "decideRefund" }]
+    },
+    {
+      "id": "gateway",
+      "type": "security",
+      "label": "Tool gateway",
+      "sublabel": "Zod, verify, bind",
+      "pos": [790, 490],
+      "size": [150, 64],
+      "sources": [{ "path": "src/agent/tools.ts", "line": 208, "label": "runTool" }]
+    },
+    {
+      "id": "api",
+      "type": "database",
+      "label": "Mock Paylane API",
+      "sublabel": "4 spec endpoints",
+      "pos": [1080, 490],
+      "size": [150, 64],
+      "sources": [{ "path": "src/paylane/api.ts", "line": 13, "label": "createPaylaneApi" }]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Local Node process",
+      "wraps": ["server", "loop", "eval", "gateway", "policy", "api"]
+    },
+    { "kind": "security-group", "label": "Code-enforced rules", "wraps": ["gateway", "policy"] }
+  ],
+  "connections": [
+    { "id": "chat", "from": "customer", "to": "playground", "label": "chat", "variant": "emphasis" },
+    { "id": "stream", "from": "playground", "to": "server", "label": "SSE stream", "variant": "emphasis" },
+    { "id": "respond", "from": "server", "to": "loop", "label": "respond()", "variant": "emphasis" },
+    { "id": "ask-model", "from": "loop", "to": "gemini", "label": "history + tools", "variant": "emphasis" },
+    { "id": "triggers", "from": "loop", "to": "jev", "label": "4 triggers", "variant": "security" },
+    { "id": "tool-calls", "from": "loop", "to": "gateway", "label": "tool calls" },
+    { "id": "decide", "from": "gateway", "to": "policy", "label": "decideRefund()", "variant": "security" },
+    { "id": "allowed", "from": "gateway", "to": "api", "label": "allowed calls" },
+    { "id": "grade", "from": "eval", "to": "jev", "label": "grade checks", "variant": "dashed" },
+    { "id": "publish", "from": "eval", "to": "report", "label": "report.json", "variant": "dashed" },
+    { "id": "replay", "from": "eval", "to": "loop", "label": "scripted chats", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "The model talks",
+      "items": [
+        "Gemini holds the conversation and picks tools",
+        "Card numbers are redacted before it sees a message",
+        "Replies pass an outbound filter for emails and cards"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Jev judges",
+      "items": [
+        "Fraud, legal, closure, override: four yes/no probabilities per message",
+        "At 0.5 or above, refunds stop for the rest of the chat",
+        "If Jev fails, refunds pause (fail closed)"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "The code decides",
+      "items": [
+        "Verify first; one customer per chat",
+        "Refund only if <= $75, under 30 days, settled, never refunded",
+        "A blocked call never reaches the API and counts as an eval failure"
+      ]
+    }
+  ]
+}
