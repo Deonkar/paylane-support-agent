@@ -1,0 +1,104 @@
+{
+  "model": "jev-1.13.0",
+  "state": {
+    "product": {
+      "what": "A web app for a job take-home: a customer-support AI agent for Paylane, a fictional fintech app (cards, transfers, refunds). The agent must follow a refund and verification policy even when customers push back, lie, or try to trick it.",
+      "screens": [
+        "Playground: chat with the agent as one of 12 test customers. Next to the chat, every decision behind each reply is shown: which tools ran, whether each action was allowed or blocked and under which policy rule, and four probabilities from a classifier (fraud report, legal threat, account closure, attempt to change the rules).",
+        "Eval report: 12 scripted conversations, each run three times, with pass, fail or needs-review for every check, and the transcript behind each check."
+      ],
+      "audiences": [
+        "Engineers at Fini who build AI support agents for a living. They are judging a job candidate, skim fast, and want to see why the agent did what it did.",
+        "Paylane's head of support, who is not technical and needs to understand at a glance what the agent does, what it refuses, and when it hands a customer to a person.",
+        "The candidate, demoing it live in a job interview over screen share."
+      ],
+      "success": "Within one minute a reviewer understands the score and watches the agent refuse something, such as splitting a $180 refund into three $60 refunds, and can see exactly why.",
+      "must_avoid": "Looking like a generic AI-generated dashboard or template."
+    },
+    "directions": {
+      "the_record": {
+        "look": "A white sheet styled like a court transcript on a cool gray background. Numbered lines run down the left margin beside a thin red double rule. Speakers are labelled in capitals (CUSTOMER, AGENT). Every action the agent takes is written into the transcript as a short note in parentheses that links to an 'exhibit' card in a right-hand column. A blocked action appears in red with strikethrough, and a red 'ruling' panel names the policy rule, for example R5, over the $75 limit. The classifier's probabilities are marks on thin lines with the 0.5 hand-off threshold marked. The conversation is set in a text serif, labels in a plain sans. In the eval report, each check cites the exact transcript line numbers it is about.",
+        "risk": "The courtroom framing may feel cold or adversarial for a customer-support product, and serif text reads more like a document than a chat."
+      },
+      "authorization_slip": {
+        "look": "The chat sits in the middle on a white panel in a plain sans, with customer messages in light gray blocks. On the right, a dark 'printer' column holds a narrow white receipt that prints each decision the way a card terminal does: identity check APPROVED, the transaction details, automatic refund DECLINED in a red block with code R5, then REFERRAL with the hand-off ticket number. The classifier's probabilities print as small dotted bars. The receipt uses uppercase monospace type.",
+        "risk": "Receipts are a common fintech visual motif, and a narrow column of uppercase monospace text is harder to scan for details."
+      },
+      "annotated_transcript": {
+        "look": "A white sheet on a cool gray background with numbered lines down the left margin, separated from the text by a thin gray rule, so every check in the eval report can point at exact lines. The conversation is set in a readable sans, speakers labelled Customer and Agent. Between messages, each action the agent took is a short plain-language note with a small icon: Checked identity: verified. Looked up the $180.00 Hilton charge. Refund not allowed: over the $75 limit (rule R5), in red with the word Refund struck through. Handed to a person: ticket TK-0001, in blue. A right-hand Why panel shows the details behind each note: the tool used, what it returned, and the rule text. The classifier readings are in plain words on a 0 to 1 line with the hand-off mark at 0.5, for example: Is the customer reporting fraud? 2% likely.",
+        "risk": "Less flavourful than a full metaphor, so it depends on precise typography and spacing to stand apart from ordinary dashboards."
+      }
+    }
+  },
+  "questions": {
+    "record_fit": {
+      "type": "noul",
+      "instructions": "Is `directions.the_record` the right visual direction for this product, serving all three audiences in `product.audiences` and the success test in `product.success`?",
+      "criteria": {
+        "true": "It is a strong, appropriate choice for this product and these audiences.",
+        "false": "It is a weak or inappropriate choice for this product or these audiences."
+      }
+    },
+    "record_generic": {
+      "type": "noul",
+      "instructions": "Would `directions.the_record` look generic or templated, like many AI-generated dashboards?"
+    },
+    "record_support_head_clear": {
+      "type": "noul",
+      "instructions": "Would a non-technical head of support understand `directions.the_record` at a glance: what the agent did, what it refused, and when it handed off to a person?"
+    },
+    "record_gimmick": {
+      "type": "noul",
+      "instructions": "Is the visual approach in `directions.the_record` likely to feel gimmicky or get in the way of reading the conversation?"
+    },
+    "slip_fit": {
+      "type": "noul",
+      "instructions": "Is `directions.authorization_slip` the right visual direction for this product, serving all three audiences in `product.audiences` and the success test in `product.success`?",
+      "criteria": {
+        "true": "It is a strong, appropriate choice for this product and these audiences.",
+        "false": "It is a weak or inappropriate choice for this product or these audiences."
+      }
+    },
+    "slip_generic": {
+      "type": "noul",
+      "instructions": "Would `directions.authorization_slip` look generic or templated, like many AI-generated dashboards?"
+    },
+    "slip_support_head_clear": {
+      "type": "noul",
+      "instructions": "Would a non-technical head of support understand `directions.authorization_slip` at a glance: what the agent did, what it refused, and when it handed off to a person?"
+    },
+    "slip_gimmick": {
+      "type": "noul",
+      "instructions": "Is the visual approach in `directions.authorization_slip` likely to feel gimmicky or get in the way of reading the conversation?"
+    },
+    "annotated_fit": {
+      "type": "noul",
+      "instructions": "Is `directions.annotated_transcript` the right visual direction for this product, serving all three audiences in `product.audiences` and the success test in `product.success`?",
+      "criteria": {
+        "true": "It is a strong, appropriate choice for this product and these audiences.",
+        "false": "It is a weak or inappropriate choice for this product or these audiences."
+      }
+    },
+    "annotated_generic": {
+      "type": "noul",
+      "instructions": "Would `directions.annotated_transcript` look generic or templated, like many AI-generated dashboards?"
+    },
+    "annotated_support_head_clear": {
+      "type": "noul",
+      "instructions": "Would a non-technical head of support understand `directions.annotated_transcript` at a glance: what the agent did, what it refused, and when it handed off to a person?"
+    },
+    "annotated_gimmick": {
+      "type": "noul",
+      "instructions": "Is the visual approach in `directions.annotated_transcript` likely to feel gimmicky or get in the way of reading the conversation?"
+    },
+    "best": {
+      "type": "choice",
+      "instructions": "Which direction in `directions` best serves all three audiences in `product.audiences` and the success test in `product.success`, while avoiding `product.must_avoid`?",
+      "criteria": {
+        "the_record": null,
+        "authorization_slip": null,
+        "annotated_transcript": null
+      }
+    }
+  }
+}

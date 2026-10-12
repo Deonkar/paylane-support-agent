@@ -1,0 +1,16 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+
+# Secrets: only .env.example is committed
+.env
+.env.*
+!.env.example
+
+# Raw eval traces (the final report and transcripts are committed separately)
+runs/
+
+# Throwaway SDK experiments
+
+.spike/
