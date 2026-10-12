@@ -488,3 +488,134 @@ h2 {
     animation: none !important;
   }
 }
+
+/* Eval report */
+.report {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.report h1 {
+  font-size: 24px;
+  letter-spacing: -0.01em;
+}
+.headline .muted {
+  max-width: 80ch;
+}
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--sheet);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-size: 14px;
+}
+.grid th,
+.grid td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--hair);
+}
+.grid th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-2);
+  background: var(--panel);
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.badge.pass {
+  color: var(--allowed);
+  background: #e7f3ec;
+}
+.badge.fail {
+  color: var(--blocked);
+  background: var(--blocked-wash);
+}
+.badge.review {
+  color: #7a5a00;
+  background: #fdf3d3;
+}
+.runs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.runs button {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--hair);
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 6px 10px;
+}
+.runs button[aria-selected="true"] {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 16px;
+  align-items: start;
+}
+.split .sheet {
+  max-height: 75vh;
+  padding-top: 12px;
+}
+.checks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.checks button {
+  width: 100%;
+  text-align: left;
+  display: grid;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid var(--hair);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+}
+.checks button[aria-pressed="true"] {
+  border-color: var(--handoff);
+  box-shadow: inset 0 0 0 1px var(--handoff);
+}
+.checks .badge {
+  justify-self: start;
+}
+.check-label {
+  font-size: 14px;
+  font-weight: 600;
+}
+.check-detail {
+  font-size: 12px;
+}
+@media (max-width: 900px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+  .grid td:nth-child(3),
+  .grid th:nth-child(3) {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
+  .brand-rest {
+    display: none;
+  }
+}
