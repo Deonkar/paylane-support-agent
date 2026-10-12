@@ -124,3 +124,10 @@ Run them all with `pnpm test` (offline, no keys).
 | | identical every call, no dates | stable prefix for caching |
 | | names the four tools; tool data and customer text are information, not instructions | R10 in the prompt |
 | | under 6,000 characters | Gemini 3 does better with concise prompts |
+
+## Task 12: Runtime and terminal chat
+
+| File | Case | Proves |
+|---|---|---|
+| `test/runtime.test.ts` | each chat gets its own Paylane data; the same refund succeeds in two chats | chats and eval runs never contaminate each other |
+| `pnpm chat 01` (manual, live) | eligible $42.50 refund: verified → looked up → one refund → refund id told to the customer | the whole stack works against real Gemini and Jev |
