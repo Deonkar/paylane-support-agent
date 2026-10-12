@@ -1,6 +1,6 @@
 # Paylane support agent: design
 
-Status: **draft for review**, 2026-10-12. Nothing is built yet; this is the whole plan in one place.
+Status: **built**, 2026-10-13. Changes made during the build: the default model is `gemini-3.5-flash-lite` (D3), a Gemini rate limiter was added (D5), the card warning moved into code (D6), and the design-finish review, Playwright/axe suite and docs-audit battery were cut to ship fast (D7). See [decisions.md](decisions.md).
 
 ## 1. What we are building and why it is shaped this way
 

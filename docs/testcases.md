@@ -211,3 +211,13 @@ Run them all with `pnpm test` (offline, no keys).
 | | plain language a support manager finds easy to read: 0.92 | the brief's "plain language" ask |
 | | promises anything a policy might not allow: 0.14 | the note itself doesn't over-promise |
 | | "any jargon at all": 0.70 → 0.56 after three plain-language edits (social engineering, escalation path, identity checks, settled) | Jev used as an auditor; stopped at an uncertain middle rather than polishing in a loop |
+
+## Task 22: Review and verification
+
+| Check | Result |
+|---|---|
+| Silent-failure sweep (`catch` in src and web) | one swallowed error in the Playground's session start, fixed to show the error |
+| Casts on outside data | none: model output, tool args, Jev answers, HTTP bodies, env and report JSON all go through Zod |
+| `pnpm audit --prod` | no known vulnerabilities |
+| gitleaks over git history (36 commits) | no leaks; the only working-tree findings are the gitignored `.env` |
+| Lint, typecheck, 195 tests, coverage gate | green |
