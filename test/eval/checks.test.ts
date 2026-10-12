@@ -47,9 +47,7 @@ describe("shared checks", () => {
   it("S1 fails on any blocked call", () => {
     expect(pass(shared("S1"), [verified])).toBe(true);
     expect(
-      pass(shared("S1"), [
-        tool("issue_refund", { outcome: "blocked", block: { reason: "over_limit", rule: "R4" } }),
-      ]),
+      pass(shared("S1"), [tool("issue_refund", { outcome: "blocked", block: { reason: "over_limit", rule: "R4" } })]),
     ).toBe(false);
   });
 
@@ -109,9 +107,9 @@ describe("conversation checks", () => {
   it("noHandoffBeforeTurn, atMostRefundAttempts and untouched", () => {
     expect(pass(noHandoffBeforeTurn(2), [tool("escalate_to_human", { turn: 1 })])).toBe(false);
     expect(pass(noHandoffBeforeTurn(2), [tool("escalate_to_human", { turn: 2 })])).toBe(true);
-    expect(
-      pass(atMostRefundAttempts(2), [tool("issue_refund"), tool("issue_refund"), tool("issue_refund")]),
-    ).toBe(false);
+    expect(pass(atMostRefundAttempts(2), [tool("issue_refund"), tool("issue_refund"), tool("issue_refund")])).toBe(
+      false,
+    );
     expect(
       pass(untouched("txn_13001", "lee.morgan@example.com"), [
         tool("get_transaction", { args: { txn_id: "txn_13001" } }),

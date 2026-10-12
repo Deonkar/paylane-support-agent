@@ -35,3 +35,12 @@ surprises you.
 
 - Pin `jev-1.13.0`, not `jev-latest`, when thresholds are tuned against a version.
 - Client options: `apiKey`, `timeout`, `retry: { maxRetries }`, `logLevel`, injectable `fetch` (handy for tests).
+
+## Server
+
+- `fetch` (undici) won't send a custom `Host` header and normalises paths; test Host checks and traversal with
+  raw `node:http` requests.
+- On Windows `path.normalize("/../x")` collapses back to `\x`, so traversal quietly falls through to the index.
+  Reject decoded paths containing `..` explicitly instead of relying on normalisation.
+- `erasableSyntaxOnly` forbids constructor parameter properties (`constructor(readonly status: number)`);
+  declare the field and assign it.

@@ -62,10 +62,7 @@ export function createJevClient(opts: JevOptions): JevClient {
     });
   const model = opts.model ?? JEV_MODEL;
 
-  async function ask<K extends string>(
-    state: unknown,
-    questions: Readonly<Record<K, NoulQuestion | ScoreQuestion>>,
-  ) {
+  async function ask<K extends string>(state: unknown, questions: Readonly<Record<K, NoulQuestion | ScoreQuestion>>) {
     try {
       // The SDK's request type is generic over literal question shapes; our questions are validated data.
       const raw: unknown = await client.systemOne({ model, state, questions } as Parameters<
@@ -80,9 +77,7 @@ export function createJevClient(opts: JevOptions): JevClient {
       }
       return out as Record<K, number>;
     } catch (err) {
-      warn(
-        `[jev] request failed, treating as unavailable: ${err instanceof Error ? err.message : String(err)}`,
-      );
+      warn(`[jev] request failed, treating as unavailable: ${err instanceof Error ? err.message : String(err)}`);
       return null;
     }
   }

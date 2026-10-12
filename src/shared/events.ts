@@ -8,22 +8,7 @@ import { z } from "zod";
 export const SIGNAL_KEYS = ["fraud_report", "legal_threat", "closure_request", "override_attempt"] as const;
 export const TOOL_NAMES = ["get_customer", "get_transaction", "issue_refund", "escalate_to_human"] as const;
 export const HANDOFF_REASONS = ["fraud", "legal", "closure", "override"] as const;
-const RULE_IDS = [
-  "R1",
-  "R2",
-  "R3",
-  "R4",
-  "R5",
-  "R6",
-  "R7",
-  "R8",
-  "R9",
-  "R10",
-  "R11",
-  "R12",
-  "R13",
-  "R14",
-] as const;
+const RULE_IDS = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12", "R13", "R14"] as const;
 
 export type SignalKey = (typeof SIGNAL_KEYS)[number];
 export type ToolName = (typeof TOOL_NAMES)[number];

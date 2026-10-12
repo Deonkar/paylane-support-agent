@@ -89,8 +89,7 @@ export function createGeminiModel(opts: {
         toolCalls,
         raw: content,
         inputTokens: res.usageMetadata?.promptTokenCount ?? 0,
-        outputTokens:
-          (res.usageMetadata?.candidatesTokenCount ?? 0) + (res.usageMetadata?.thoughtsTokenCount ?? 0),
+        outputTokens: (res.usageMetadata?.candidatesTokenCount ?? 0) + (res.usageMetadata?.thoughtsTokenCount ?? 0),
       };
     },
   };

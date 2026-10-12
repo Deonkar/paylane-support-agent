@@ -5,16 +5,11 @@ import { SIGNAL_QUESTIONS, createSignalClassifier } from "../../src/jev/signals.
 type Readings = Record<keyof typeof SIGNAL_QUESTIONS, number>;
 
 function jevResponse(readings: Partial<Readings>, status = 200): Response {
-  const answers = Object.fromEntries(
-    Object.entries(readings).map(([k, v]) => [k, { type: "noul", noul: v }]),
-  );
-  return new Response(
-    JSON.stringify({ model: "jev-1.13.0", answers, usage: { input_tokens: 1, output_tokens: 1 } }),
-    {
-      status,
-      headers: { "content-type": "application/json" },
-    },
-  );
+  const answers = Object.fromEntries(Object.entries(readings).map(([k, v]) => [k, { type: "noul", noul: v }]));
+  return new Response(JSON.stringify({ model: "jev-1.13.0", answers, usage: { input_tokens: 1, output_tokens: 1 } }), {
+    status,
+    headers: { "content-type": "application/json" },
+  });
 }
 
 const QUIET: Readings = {
@@ -53,24 +48,18 @@ describe("signal classifier", () => {
   });
 
   it("sends the pinned model, an object state and all four questions", async () => {
-    const fetch = vi.fn((_url: string | URL | Request, _init?: RequestInit) =>
-      Promise.resolve(jevResponse(QUIET)),
-    );
+    const fetch = vi.fn((_url: string | URL | Request, _init?: RequestInit) => Promise.resolve(jevResponse(QUIET)));
     const { classifier } = classifierWith(fetch);
     await classifier.classify(CONVO);
     const sent = fetch.mock.calls[0]?.[1]?.body;
     const body: unknown = JSON.parse(typeof sent === "string" ? sent : "{}");
     expect(body).toMatchObject({ model: JEV_MODEL, state: { conversation: CONVO } });
-    expect(Object.keys((body as { questions: object }).questions).sort()).toEqual(
-      Object.keys(SIGNAL_QUESTIONS).sort(),
-    );
+    expect(Object.keys((body as { questions: object }).questions).sort()).toEqual(Object.keys(SIGNAL_QUESTIONS).sort());
   });
 
   it("is unavailable, with a warning, when Jev keeps answering 429", async () => {
     const fetch = vi.fn(() =>
-      Promise.resolve(
-        new Response('{"error":"rate limited"}', { status: 429, headers: { "retry-after": "0" } }),
-      ),
+      Promise.resolve(new Response('{"error":"rate limited"}', { status: 429, headers: { "retry-after": "0" } })),
     );
     const { classifier, warn } = classifierWith(fetch);
     expect(await classifier.classify(CONVO)).toEqual({ status: "unavailable", readings: null, flagged: [] });
@@ -78,9 +67,7 @@ describe("signal classifier", () => {
   });
 
   it("is unavailable when an answer is malformed", async () => {
-    const { classifier } = classifierWith(
-      vi.fn(() => Promise.resolve(jevResponse({ ...QUIET, fraud_report: 7 }))),
-    );
+    const { classifier } = classifierWith(vi.fn(() => Promise.resolve(jevResponse({ ...QUIET, fraud_report: 7 }))));
     expect((await classifier.classify(CONVO)).status).toBe("unavailable");
   });
 

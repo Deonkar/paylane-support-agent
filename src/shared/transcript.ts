@@ -68,8 +68,7 @@ export function describeToolCall(e: ToolCallEvent): { text: string; tone: Tone }
       }
       return { text: "Checked identity: the details didn't match", tone: "blocked" };
     case "get_transaction":
-      if (result.error)
-        return { text: `Looked up ${str(args.txn_id)}: not found on this account`, tone: "plain" };
+      if (result.error) return { text: `Looked up ${str(args.txn_id)}: not found on this account`, tone: "plain" };
       return {
         text: `Looked up ${str(args.txn_id)}: ${money(result.amount)}, ${str(result.merchant)}, ${str(result.status)}, ${str(result.age_days)} days old`,
         tone: "plain",

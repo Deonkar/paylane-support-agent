@@ -15,11 +15,11 @@ describe("config", () => {
   });
 
   it("keeps a Jev key and a chosen model", () => {
-    expect(
-      parseConfig({ GEMINI_API_KEY: "g", GEMINI_MODEL: "gemini-3.8-flash", TYPESAFE_API_KEY: "t" }),
-    ).toMatchObject({
-      geminiModel: "gemini-3.8-flash",
-      typesafeApiKey: "t",
-    });
+    expect(parseConfig({ GEMINI_API_KEY: "g", GEMINI_MODEL: "gemini-3.8-flash", TYPESAFE_API_KEY: "t" })).toMatchObject(
+      {
+        geminiModel: "gemini-3.8-flash",
+        typesafeApiKey: "t",
+      },
+    );
   });
 });

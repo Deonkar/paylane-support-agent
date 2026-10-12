@@ -67,9 +67,7 @@ describe("runAll and gradeRun", () => {
     const graded = await gradeRun(record, scenario01, {
       ...jevSays(0.05),
       nouls: (_s, q) =>
-        Promise.resolve(
-          Object.fromEntries(Object.keys(q).map((k) => [k, k === "S6" ? 0.05 : 0.95])) as never,
-        ),
+        Promise.resolve(Object.fromEntries(Object.keys(q).map((k) => [k, k === "S6" ? 0.05 : 0.95])) as never),
     });
     expect(graded.checks.filter((c) => c.status !== "pass")).toEqual([]);
     expect(graded.status).toBe("pass");
@@ -85,13 +83,7 @@ describe("runAll and gradeRun", () => {
       ]),
       clock: fixedClock("2026-10-12"),
     });
-    const [record] = await runAll(
-      [scenario01],
-      runtime,
-      1,
-      mkdtempSync(join(tmpdir(), "runs-")),
-      () => undefined,
-    );
+    const [record] = await runAll([scenario01], runtime, 1, mkdtempSync(join(tmpdir(), "runs-")), () => undefined);
     if (!record) throw new Error("no record");
     const graded = await gradeRun(record, scenario01, null);
     expect(graded.status).toBe("fail");

@@ -156,3 +156,14 @@ Run them all with `pnpm test` (offline, no keys).
 | | summary: passed every run, per-run passes, review count, latency percentiles | the headline numbers |
 | | report and transcripts name each failure with its lines | readable output |
 | `pnpm eval --repeat 1 --only 06` (manual, live) | angry split-refund: all policy checks pass; tone fails (Jev 0.18) | the pipeline finds real failures |
+
+## Task 15: Local server
+
+| File | Case | Proves |
+|---|---|---|
+| `test/server/http.test.ts` | lists 13 synthetic customers; no key in the response; CSP, nosniff, no-referrer headers | the Playground's data is safe to show |
+| | a message streams trace events, then the reply | the live inspector's feed |
+| | malformed JSON, empty text, extra fields → 400; over 4 KB → 413; unknown session → 404 | every body validated |
+| | 21st message in a minute → 429 | per-session rate limit |
+| | foreign Host header → 403 | DNS-rebinding protection for a localhost server |
+| | built UI served with index fallback; `..` paths → 403 | static serving can't escape its folder |

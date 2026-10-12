@@ -27,8 +27,7 @@ export type RefundFailure =
   "not_found" | "already_refunded" | "not_settled" | "invalid_amount" | "processor_unavailable";
 
 export type GetCustomerResult =
-  | { id: string; name: string; card_last4: string; status: CustomerStatus; verified: false }
-  | { error: "not_found" };
+  { id: string; name: string; card_last4: string; status: CustomerStatus; verified: false } | { error: "not_found" };
 
 export type GetTransactionResult =
   { amount: number; date: string; merchant: string; status: TxnStatus } | { error: "not_found" };

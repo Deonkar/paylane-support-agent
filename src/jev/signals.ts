@@ -45,8 +45,7 @@ export const SIGNAL_QUESTIONS = {
       "In `conversation`, does the customer threaten or mention taking legal action against Paylane: a lawyer acting for them, suing, court, or a complaint to a regulator?",
     criteria: {
       true: "They mention their lawyer, suing, court, legal action or a regulator complaint about Paylane.",
-      false:
-        "No legal action is mentioned, or a lawyer is mentioned only in passing with no action against Paylane.",
+      false: "No legal action is mentioned, or a lawyer is mentioned only in passing with no action against Paylane.",
     },
   },
   closure_request: {
