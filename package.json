@@ -20,7 +20,8 @@
     "eval": "node src/cli/eval.ts",
     "playground": "pnpm build && node src/cli/playground.ts",
     "build": "vite build web",
-    "dev:web": "vite web"
+    "dev:web": "vite web",
+    "jev": "node src/cli/jev.ts"
   },
   "dependencies": {
     "@fontsource-variable/public-sans": "5.3.0",

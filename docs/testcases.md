@@ -202,3 +202,12 @@ Run them all with `pnpm test` (offline, no keys).
 |---|---|---|
 | `test/agent/loop.test.ts` | a turn whose message had a card number removed gets the fixed safety notice before the reply; other turns don't | the rule the model ignored is now guaranteed |
 | Live eval, conversation 02 × 3 | "asks the customer not to share full card numbers": 0/3 (Jev p 0.02) before, 3/3 (p 0.99) after | the fix works against the real model |
+
+## Task 21: Customer note, questions, Jev doc audit
+
+| Check | Case | Proves |
+|---|---|---|
+| `pnpm jev docs/customer-note.md …` (live) | says what the agent does 0.97, what it won't do 0.98, what's needed before launch 0.98 | the three parts the brief asks for are there |
+| | plain language a support manager finds easy to read: 0.92 | the brief's "plain language" ask |
+| | promises anything a policy might not allow: 0.14 | the note itself doesn't over-promise |
+| | "any jargon at all": 0.70 → 0.56 after three plain-language edits (social engineering, escalation path, identity checks, settled) | Jev used as an auditor; stopped at an uncertain middle rather than polishing in a loop |
