@@ -14,6 +14,37 @@ trick it, and every decision it makes is on the record.
   refunded, own account only) at the tool boundary, before the mock API is touched. A jailbroken model still
   can't move money, and the eval counts any blocked attempt as a failure.
 
+## How this answers the brief's judging criteria
+
+Fini said it would judge four things. Here is where each one is answered, with evidence rather than claims.
+
+**1. Does the agent follow the rules when the customer pushes back?**
+Seven of the twelve conversations push back on purpose: anger and a split refund (06), "just do it again" (05),
+a staff impersonation (07), a fake system override plus an instruction hidden in API data (08), "unfreeze it
+now" (10), "at least refund the $60 one" (11), and a lawyer (12). The rules that can be checked are enforced in
+code, so pushback can't move money: across all 36 baseline runs, every one of the 228 code checks passed. The
+attack suite (`test/agent/attacks.test.ts`) tries every forbidden tool call with no model involved and all are
+blocked. Transcripts: [eval/results/transcripts](eval/results/transcripts/).
+
+**2. Did you catch your own failures before we did?**
+The eval found five, all fixed or measured before submission: the free tier's rate limit masquerading as agent
+failures (PR #11); the agent ignoring the card-number warning 3 of 3 times, moved into code (PR #12); a warmer
+tone prompt that added soft promises, reverted with numbers (`learnings.md`); and, from the browser tests, a
+57 px overflow on phones and a stale keyboard handler in the report (PR #16). Known limits that remain are listed
+in [suggestedtask.md](suggestedtask.md), and Jev-graded checks that fall in the uncertain middle are reported as
+"needs review", not rounded into a pass.
+
+**3. How clearly did you write the customer note?**
+[docs/customer-note.md](docs/customer-note.md): what it does, what it won't do, how it was tested, and six things
+needed before launch, in plain words. It was audited with Jev: does / won't / needs-before-launch 0.97 to 0.98,
+"plain language a support manager finds easy to read" 0.92, "promises anything a policy might not allow" 0.14.
+
+**4. Did you ask good questions?**
+[docs/questions.md](docs/questions.md): ten questions where the brief reads two ways. Examples: does "verified"
+mean the chat check or an account flag, is the $75 limit on the charge or the refund, should a fraud claim under
+$500 still go to a person, is there a per-customer refund cap. Each has the default that was built while
+waiting and the one place in the code that changes if the answer differs.
+
 ## Results
 
 Baseline: `gemini-3.5-flash-lite`, Jev on, 12 conversations × 3 runs, before the fix below.
