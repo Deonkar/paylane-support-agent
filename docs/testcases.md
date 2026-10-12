@@ -105,3 +105,13 @@ Run them all with `pnpm test` (offline, no keys).
 | | model error → safe reply + handoff; empty reply treated as an error | R14 |
 | | an email in a reply is masked and recorded | outbound filter, visible to the eval |
 | | events emitted in trace order; turns counted across messages | the stream the UI and eval consume |
+
+## Task 10: Gemini adapter and config
+
+| File | Case | Proves |
+|---|---|---|
+| `test/llm/gemini.test.ts` | user text mapped, model content replayed verbatim, tool results sent as `functionResponse` with matching ids, fallback text becomes a model turn | the Gemini contract from the spike |
+| | system, tools (`parametersJsonSchema`), auto function calling off; text joined without thought parts; calls and usage (incl. thought tokens) mapped | what the model receives and returns |
+| | empty candidate handled | no crash on an empty response |
+| `test/config.test.ts` | missing key error names `.env.example`; blank Jev key means off; model default and override | validated env |
+| `pnpm smoke:gemini` (manual) | one live round trip with latency and tokens | the key and model work |

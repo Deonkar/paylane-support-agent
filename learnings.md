@@ -26,6 +26,11 @@ surprises you.
 - The SDK retries 408, 429 and 5xx itself (`httpOptions.retryOptions`, default 5 attempts).
 - Free-tier limits are only shown in AI Studio, not the docs. Google recommends temperature 1.0 for Gemini 3.
 
+- **Free-tier capacity varies by model.** On 2026-10-12 `gemini-3.8-flash` returned 503 "high demand" and 504
+  deadline errors (one success took 19s) while `gemini-3.5-flash-lite` answered in ~1.4s. The SDK retries
+  5xx with backoff, which looks like a hang: set `httpOptions.timeout`. Default model is flash-lite.
+- An empty `functionDeclarations: []` is pointless; omit `tools` when there are none.
+
 ## Jev (`@typesafe-ai/sdk` 0.6.0)
 
 - Pin `jev-1.13.0`, not `jev-latest`, when thresholds are tuned against a version.
