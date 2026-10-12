@@ -22,7 +22,7 @@ export function App() {
     <div className="app">
       <header className="top">
         <span className="brand">
-          Paylane support agent <span className="muted">· Fini take-home</span>
+          Paylane <span className="brand-rest">support agent</span> <span className="muted">· Fini take-home</span>
         </span>
         <nav className="tabs" aria-label="Screens">
           <a href="#/" aria-current={onReport ? undefined : "page"}>

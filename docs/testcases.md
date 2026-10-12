@@ -177,3 +177,13 @@ Run them all with `pnpm test` (offline, no keys).
 | | selecting a note reports its line | the Why panel follows the selection |
 | Browser, live (gemini-3.5-flash-lite + Jev) | conversation 6 typed in the Playground: verified → looked up → handed off; split refused; Jev readings shown; Why panel shows the tool, input, result | the UI works against the real agent |
 | Browser, 375 px | single column, customers scroll sideways, record readable | mobile width |
+
+## Task 17: Eval report UI and Pages
+
+| Check | Case | Proves |
+|---|---|---|
+| Browser, live data | `#/report` shows the headline (passed all runs), per-run counts, latency, and a grid with icon + word badges | the static report reads `report.json` |
+| Browser | `#/report/06` shows the transcript, run tabs and every check with its rules; selecting a check highlights its lines; J/K move between conversations | drill-down from a score to the evidence |
+| Browser, 349 px | report and detail readable on a phone | mobile width |
+| `report.json` parsed with Zod in the browser | malformed or missing data shows the "run pnpm eval" empty state | outside data validated in the UI too |
+| `.github/workflows/pages.yml` | builds `web/` with the committed results and deploys to GitHub Pages | reviewers browse results with no setup |
