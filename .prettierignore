@@ -6,3 +6,4 @@ runs
 pnpm-lock.yaml
 .impeccable
 eval/results
+*.md
