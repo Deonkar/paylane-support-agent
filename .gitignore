@@ -21,3 +21,7 @@ web/dist/
 
 # Diagram working files (the delivered copy lives in docs/)
 .archify/
+
+# Playwright output
+playwright-report/
+test-results/

@@ -221,3 +221,18 @@ Run them all with `pnpm test` (offline, no keys).
 | `pnpm audit --prod` | no known vulnerabilities |
 | gitleaks over git history (36 commits) | no leaks; the only working-tree findings are the gitignored `.env` |
 | Lint, typecheck, 195 tests, coverage gate | green |
+
+## Task 18: Browser tests (restored)
+
+`pnpm test:e2e`: Playwright against the built static UI, at 1440 px (desktop) and Pixel 7 (mobile). Runs in CI.
+
+| File | Case | Proves |
+|---|---|---|
+| `e2e/ui.spec.ts` | report headline and grid render from `report.json`; badges carry words, not just colour; axe finds no violations | the static report works and is accessible |
+| | selecting a check marks it; J and K move between conversations; axe clean | drill-down and keyboard use |
+| | with the agent server absent, the Playground explains how to run it locally; axe clean | the GitHub Pages view of the Playground |
+| | no horizontal page overflow on the report, a conversation, or the Playground | mobile width |
+
+Found and fixed by these tests: the report grid overflowed a 412 px phone by 57 px (now scrolls inside its own
+container), and pressing K right after J acted on the previous conversation (stale closure; the handler now reads
+the current conversation from the URL).

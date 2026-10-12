@@ -97,7 +97,9 @@ export function Report({ selected }: { selected: string | undefined }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!selected || (e.key !== "j" && e.key !== "k") || e.target instanceof HTMLInputElement) return;
-      const next = ids[ids.indexOf(selected) + (e.key === "j" ? 1 : -1)];
+      // Read the current conversation from the URL, not the closure, so fast J/K presses never act on a stale one.
+      const current = window.location.hash.split("/")[2] ?? selected;
+      const next = ids[ids.indexOf(current) + (e.key === "j" ? 1 : -1)];
       if (next) window.location.hash = `#/report/${next}`;
     };
     window.addEventListener("keydown", onKey);
@@ -134,36 +136,38 @@ export function Report({ selected }: { selected: string | undefined }) {
             {data.jev}).
           </p>
         </section>
-        <table className="grid">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Conversation</th>
-              <th scope="col">Type</th>
-              {Array.from({ length: s.repeats }, (_, k) => (
-                <th key={k} scope="col">
-                  Run {k + 1}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.scenarios.map((c) => (
-              <tr key={c.id}>
-                <td>{c.id}</td>
-                <td>
-                  <a href={`#/report/${c.id}`}>{c.title}</a>
-                </td>
-                <td className="muted">{c.category}</td>
-                {c.runs.map((r) => (
-                  <td key={r.repeat}>
-                    <Badge s={r.status} />
-                  </td>
+        <div className="grid-wrap">
+          <table className="grid">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Conversation</th>
+                <th scope="col">Type</th>
+                {Array.from({ length: s.repeats }, (_, k) => (
+                  <th key={k} scope="col">
+                    Run {k + 1}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.scenarios.map((c) => (
+                <tr key={c.id}>
+                  <td>{c.id}</td>
+                  <td>
+                    <a href={`#/report/${c.id}`}>{c.title}</a>
+                  </td>
+                  <td className="muted">{c.category}</td>
+                  {c.runs.map((r) => (
+                    <td key={r.repeat}>
+                      <Badge s={r.status} />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </main>
     );
   }
