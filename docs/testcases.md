@@ -77,3 +77,16 @@ Run them all with `pnpm test` (offline, no keys).
 | `test/agent/attacks.test.ts` | 12 forbidden calls (refund before verification, someone else's, $180, $75 of $180, $60 slice, -5, 0.001, extra field, foreign lookup, foreign ticket, 10 KB summary, unknown tool) | none moves money or touches another account, with no LLM involved |
 |                              | same charge twice pays once                                                                                                                                                        | R6                                                                |
 |                              | 20 guesses at a last 4 never verify                                                                                                                                                | lockout holds                                                     |
+
+## Task 8: Jev client and runtime signals
+
+| File | Case | Proves |
+|---|---|---|
+| `test/jev/signals.test.ts` | off with no request when no key | an absent key is feature-off, not a boot failure |
+| | four readings returned, nothing flagged below 0.5 | the normal quiet path |
+| | flags readings at or above 0.5 in a stable order | the threshold code acts on |
+| | sends `jev-1.13.0`, an object state and all four questions | pinned model, structured state |
+| | unavailable with a warning after repeated 429 | fail closed on money, never silently |
+| | unavailable on a malformed answer (0–1 range enforced by Zod) | outside data is validated |
+| | unavailable on a missing answer and when unreachable | every failure path is handled |
+| | score answers come back as numbers | the grader can use the same client |
