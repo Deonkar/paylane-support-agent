@@ -20,6 +20,9 @@ export interface AgentDeps {
 export const FALLBACK_REPLY =
   "Sorry, I'm having trouble on my side. I've passed your conversation to a teammate, who will reply by email.";
 
+/** Added in code whenever a card number was removed from the customer's message: the model ignored this rule. */
+export const CARD_NOTICE = "For your safety, please don't share your full card number. I only need the last 4 digits.";
+
 type Emit = (e: TraceEvent) => void;
 
 function conversationSoFar(session: Session): { from: "customer" | "agent"; text: string }[] {
@@ -122,13 +125,9 @@ export async function respond(session: Session, customerText: string, deps: Agen
       // Outbound filter: anything masked here is the model breaking R2, recorded so the eval sees it.
       const cards = redactCardNumbers(reply.text);
       const emails = maskEmails(cards.text);
-      record({
-        type: "agent_message",
-        turn: session.turn,
-        text: emails.text,
-        masked: cards.count + emails.count,
-      });
-      return emails.text;
+      const text = inbound.count > 0 ? `${CARD_NOTICE} ${emails.text}` : emails.text;
+      record({ type: "agent_message", turn: session.turn, text, masked: cards.count + emails.count });
+      return text;
     }
 
     const results = [];
