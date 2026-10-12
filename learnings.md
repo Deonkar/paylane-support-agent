@@ -58,3 +58,5 @@ surprises you.
 - **A warmer prompt is not automatically better.** Asking for names and acknowledgement made replies warmer, but
   also added soft promises ("it should show up soon") that pushed the no-false-promises check into review in
   5 more runs, while Jev's tone score didn't move (0.50 → 0.48). Reverted; measured, not assumed.
+- **Quota errors twice contaminated an eval** (graded as agent fallbacks). `runAll` now refuses to save or
+  grade a run where the model call failed and stops, so a rerun resumes from that run.

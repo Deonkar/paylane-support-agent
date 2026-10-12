@@ -95,6 +95,18 @@ describe("runAll and gradeRun", () => {
   });
 });
 
+describe("runAll and a failing model", () => {
+  it("stops without saving a run where the model failed, so a rerun resumes it", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "runs-"));
+    const runtime = createRuntime(config, {
+      model: scriptedModel([new Error("429 quota")]),
+      clock: fixedClock("2026-10-12"),
+    });
+    await expect(runAll([scenario01], runtime, 1, dir, () => undefined)).rejects.toThrow(/not saved/);
+    expect(readdirSync(dir)).toEqual([]);
+  });
+});
+
 describe("summarize and report", () => {
   const run = (id: string, repeat: number, status: GradedRun["status"]): GradedRun => ({
     scenarioId: id,
