@@ -236,3 +236,11 @@ Run them all with `pnpm test` (offline, no keys).
 Found and fixed by these tests: the report grid overflowed a 412 px phone by 57 px (now scrolls inside its own
 container), and pressing K right after J acted on the previous conversation (stale closure; the handler now reads
 the current conversation from the URL).
+
+## Jev audits (restored)
+
+| Audit | Result |
+|---|---|
+| Built UI, same questions as the direction round (`.impeccable/jev/built-ui.*`) | fit 0.59 (proposed 0.76), looks generic 0.35 (proposed 0.45, the watch-point, improved), clear to a support head 0.71 (0.83), gimmicky 0.33 (0.22). Mixed: likely the raw JSON in the Why panel; recorded, not chased, per the "keep the UI simple" call |
+| README | explains how to run it 0.98, edge cases and why 0.95, failure and fix 0.99, claims without evidence 0.44 (uncertain) |
+| `docs/questions.md` | answerable in one or two sentences 0.87, each states the assumption made 0.97 |
