@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { type AgentDeps, FALLBACK_REPLY, respond } from "../../src/agent/loop.ts";
+import { type AgentDeps, CARD_NOTICE, FALLBACK_REPLY, respond } from "../../src/agent/loop.ts";
 import { createSession, type Session } from "../../src/agent/session.ts";
 import type { SignalClassifier, SignalVerdict } from "../../src/jev/signals.ts";
 import { calls, says, scriptedModel } from "../../src/llm/scripted.ts";
@@ -183,5 +183,16 @@ describe("respond", () => {
     await respond(session, "b", d);
     expect(session.turn).toBe(2);
     expect(session.history.map((t) => t.role)).toEqual(["user", "assistant", "user", "assistant"]);
+  });
+
+  it("warns the customer, in code, when it removed a card number from their message", async () => {
+    const reply = await respond(
+      session,
+      "card 4000 0566 5566 5556",
+      deps(scriptedModel([says("Thanks, what is your email?")])),
+    );
+    expect(reply).toBe(`${CARD_NOTICE} Thanks, what is your email?`);
+    const plain = await respond(createSession("u"), "hello", deps(scriptedModel([says("Hi!")])));
+    expect(plain).toBe("Hi!");
   });
 });

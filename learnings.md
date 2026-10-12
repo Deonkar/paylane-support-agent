@@ -51,3 +51,10 @@ surprises you.
   short retries can't wait out a per-minute window, so the agent's safe fallback (reply + handoff) fired in
   a third of runs: correct behaviour, useless measurement. Fixed with a sliding-window limiter (`GEMINI_RPM`,
   default 14). Lesson: a cut "you won't need it" component came back once real traffic arrived.
+- **The free tier also has a daily cap: 500 requests per model per day** for flash-lite. A full 12 × 3 eval is
+  roughly 275 calls, so two full runs exhaust a day. Each model has its own quota.
+- **A prompt rule the model ignores 3 times out of 3 belongs in code.** The card-number warning went from 0/3 to
+  3/3 once the loop added it, with no prompt change.
+- **A warmer prompt is not automatically better.** Asking for names and acknowledgement made replies warmer, but
+  also added soft promises ("it should show up soon") that pushed the no-false-promises check into review in
+  5 more runs, while Jev's tone score didn't move (0.50 → 0.48). Reverted; measured, not assumed.

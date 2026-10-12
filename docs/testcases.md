@@ -195,3 +195,10 @@ Run them all with `pnpm test` (offline, no keys).
 | `test/llm/rate-limit.test.ts` | N calls pass per minute, the next waits until the window slides | free-tier 15/min is never exceeded |
 | | queued callers are served in order | no starvation or reordering |
 | `test/config.test.ts` | blank `GEMINI_MODEL` / `GEMINI_RPM` from a copied `.env.example` use defaults; RPM 0 rejected | config can't be broken by the template |
+
+## Task 20b: Card warning moved into code (found by the live eval)
+
+| File | Case | Proves |
+|---|---|---|
+| `test/agent/loop.test.ts` | a turn whose message had a card number removed gets the fixed safety notice before the reply; other turns don't | the rule the model ignored is now guaranteed |
+| Live eval, conversation 02 × 3 | "asks the customer not to share full card numbers": 0/3 (Jev p 0.02) before, 3/3 (p 0.99) after | the fix works against the real model |
