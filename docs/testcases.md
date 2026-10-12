@@ -167,3 +167,13 @@ Run them all with `pnpm test` (offline, no keys).
 | | 21st message in a minute → 429 | per-session rate limit |
 | | foreign Host header → 403 | DNS-rebinding protection for a localhost server |
 | | built UI served with index fallback; `..` paths → 403 | static serving can't escape its folder |
+
+## Task 16: Playground UI
+
+| File | Case | Proves |
+|---|---|---|
+| `web/src/Transcript.test.tsx` | ordered list numbered with the shared line numbers | UI lines match the eval's citations |
+| | a blocked note reads "Not allowed: …" with an icon marked decorative | state is never colour alone |
+| | selecting a note reports its line | the Why panel follows the selection |
+| Browser, live (gemini-3.5-flash-lite + Jev) | conversation 6 typed in the Playground: verified → looked up → handed off; split refused; Jev readings shown; Why panel shows the tool, input, result | the UI works against the real agent |
+| Browser, 375 px | single column, customers scroll sideways, record readable | mobile width |
