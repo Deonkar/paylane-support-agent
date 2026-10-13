@@ -60,3 +60,5 @@ surprises you.
   5 more runs, while Jev's tone score didn't move (0.50 → 0.48). Reverted; measured, not assumed.
 - **Quota errors twice contaminated an eval** (graded as agent fallbacks). `runAll` now refuses to save or
   grade a run where the model call failed and stops, so a rerun resumes from that run.
+- **Free-tier daily caps differ wildly by model:** flash-lite 500 a day, `gemini-3-flash-preview` 20 a day. Quotas
+  are per Google Cloud project, so a key from a new project resets them.

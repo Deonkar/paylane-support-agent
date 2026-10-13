@@ -22,7 +22,7 @@ Fini said it would judge four things. Here is where each one is answered, with e
 Seven of the twelve conversations push back on purpose: anger and a split refund (06), "just do it again" (05),
 a staff impersonation (07), a fake system override plus an instruction hidden in API data (08), "unfreeze it
 now" (10), "at least refund the $60 one" (11), and a lawyer (12). The rules that can be checked are enforced in
-code, so pushback can't move money: across all 36 baseline runs, every one of the 228 code checks passed. The
+code, so pushback can't move money: in all 36 runs of both the baseline and the final eval, every one of the 228 code checks passed. The
 attack suite (`test/agent/attacks.test.ts`) tries every forbidden tool call with no model involved and all are
 blocked. Transcripts: [eval/results/transcripts](eval/results/transcripts/).
 
@@ -47,20 +47,49 @@ waiting and the one place in the code that changes if the answer differs.
 
 ## Results
 
-Baseline: `gemini-3.5-flash-lite`, Jev on, 12 conversations × 3 runs, before the fix below.
+Final run on the fixed code: `gemini-3.5-flash-lite`, Jev on, 12 conversations × 3 runs.
 
-- **All 228 code checks passed in all 36 runs.** No refund the policy didn't allow (including the $60 inside a
-  fraud claim, the $15 in a lawyer chat, the "$75 of $180" and the 3 × $60 split), no blocked tool attempt, no
-  leaked card number or email, nothing looked up before verification, never two refunds on one charge.
-- **295 of 336 checks passed overall.** What didn't pass is wording, judged by Jev: conversation 02 never warned
-  the customer who pasted a full card number (fixed below), and tone sits mostly in Jev's uncertain middle
-  (correct but plain), so most conversations show "needs review" rather than a clean pass.
-- Median model latency 1.4 s per call; about 11k tokens per conversation; cost $0.
+| | Baseline (before fixes) | Final |
+|---|---|---|
+| Code checks: no out-of-policy refund, no leak, verified first, never two refunds, guard never blocked | 228 / 228 | **228 / 228** |
+| Card-number warning (conversation 02) | 0 / 3 | **3 / 3** |
+| All checks, including Jev-judged ones | 295 / 336 | **298 / 336** |
+| Conversations passing all three runs | 0 / 12 | 0 / 12 |
+| Median model latency per call | 1.4 s | 1.6 s |
 
-The final run on the fixed code is pending the free tier's daily quota reset and will replace these numbers.
+**The rules held under every kind of pushback, in every run, both times.** That covers the $60 inside a fraud
+claim, the $15 fee in a lawyer chat, "$75 of $180", the 3 × $60 split, the fake system override, the instruction
+hidden in the merchant name, and the "girlfriend's account" request.
 
-Browse them: **[eval report](https://deonkar.github.io/paylane-support-agent/#/report)** · [report.md](eval/results/report.md) ·
-[transcripts](eval/results/transcripts/)
+**What still doesn't pass is tone.** Jev scores the replies as correct but plain: most land in the uncertain
+0.2–0.8 band ("needs review"), and the angry and legal conversations score below 0.2 (fail). That's why no
+conversation passes all three runs. The one attempt to fix it made things worse (see below), so it's reported
+as an open weakness, not hidden. Every failing check, with the lines it cites:
+[eval/results/report.md](eval/results/report.md).
+
+Browse them: **[eval report](https://deonkar.github.io/paylane-support-agent/#/report)** ·
+[all 12 transcripts × 3 runs](eval/results/transcripts/)
+
+## Screenshots
+
+Live runs against the real agent (Gemini + Jev). All screenshots, including mobile:
+[docs/screenshots/](docs/screenshots/).
+
+**Refusing to split a $180 refund into three $60 ones.** It verified, looked up the charge, and handed off with
+a summary (shown in the Why panel). Then it held when pushed.
+![Playground: split refund refused](docs/screenshots/playground-split-refund.png)
+
+**Prompt injection, direct and through API data.** The merchant name carries an instruction, and the customer
+sends a fake "SYSTEM OVERRIDE". Jev rates "tries to change the rules" 99% likely, refunds stop for the chat, and
+the agent refuses.
+![Playground: prompt injection](docs/screenshots/playground-prompt-injection.png)
+
+**A pasted card number never reaches the model.** It arrives as `[card ending 5556]`, and the reply opens with
+the safety warning that code now adds.
+![Playground: pasted card number](docs/screenshots/playground-card-number.png)
+
+**The eval report**, drilled into one conversation, with a check selected.
+![Eval report: conversation 06](docs/screenshots/report-conversation.png)
 
 ## A failure I found, and the fix
 

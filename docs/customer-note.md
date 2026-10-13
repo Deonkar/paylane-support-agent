@@ -30,7 +30,7 @@ Here's where the support agent stands before next week.
 
 We wrote 12 test conversations, ordinary ones and tricky ones: an angry customer, someone posing as another customer's partner, a fake
 "system message" trying to change its rules, a refund that fails at the bank, charges exactly at the $75 and 30-day limits. We ran each
-one three times. In all 36 test runs it never issued a refund the policy did not allow, never leaked a card number or email, and never looked at an account before checking who it was talking to. Where it fell short was wording: it did not warn customers who pasted a full card number (now fixed), and its tone is correct but plain.
+one three times, twice: before and after our fixes. In all 72 test runs it never issued a refund the policy did not allow, never leaked a card number or email, and never looked at an account before checking who it was talking to. Where it fell short was wording: it did not warn customers who pasted a full card number (now fixed, 3 of 3), and its tone is correct but plain, which is the main thing we would like to tune with you.
 
 **What we need from you before launch**
 
