@@ -250,3 +250,10 @@ the current conversation from the URL).
 | File | Case | Proves |
 |---|---|---|
 | `test/eval/grade.test.ts` | a run whose model call fails stops the eval and saves nothing; a rerun resumes it | quota errors and outages can't be graded as agent behaviour again |
+
+## Task 20: Final eval and screenshots
+
+| Check | Result |
+|---|---|
+| Final eval, `gemini-3.5-flash-lite`, 12 × 3, Jev on (`eval/results/`) | code checks 228/228 (same as baseline); card warning 3/3 (baseline 0/3); all checks 298/336 (baseline 295/336); remaining failures are tone only |
+| `pnpm screenshots` (live) | Playground: split refund refused, prompt injection flagged and refused, pasted card redacted and warned, eligible refund issued; report overview, drill-down and mobile, all in `docs/screenshots/` |

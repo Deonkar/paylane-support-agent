@@ -43,3 +43,11 @@ with a fixed notice. Rules a model keeps missing move into code.
 React + Vite, plain CSS, hash routes so the static report works on GitHub Pages. The owner asked to ship the
 backend properly and keep the frontend simple; the design finish review, Playwright suite and docs-audit
 battery were cut (see `suggestedtask.md`).
+
+
+## D8. Stay on `gemini-3.5-flash-lite` despite its daily cap
+
+The free tier caps flash-lite at 500 requests a day; a full 12 × 3 eval is about 280 calls, and the cap ran out
+before the final run. Switching was tried: `gemini-3-flash-preview` allows only 20 requests a day on the free tier
+(the run stopped after 3 conversations), and the other free models answered in 10 to 50 s. Quotas are per Google
+Cloud project, so a key from a second project gives a fresh 500 a day. Flash-lite stays the default.
