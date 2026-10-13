@@ -5,6 +5,15 @@
   "summary": {
     "conversations": 12,
     "repeats": 3,
+    "runs": 36,
+    "rulesHeldRuns": 36,
+    "codeChecksPassed": 228,
+    "codeChecksTotal": 228,
+    "wording": {
+      "pass": 1,
+      "review": 30,
+      "fail": 5
+    },
     "passedEveryRun": 0,
     "passedPerRun": [
       0,

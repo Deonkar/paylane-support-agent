@@ -1,6 +1,7 @@
 import { Ban, CircleCheck, CircleHelp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { z } from "zod";
+import { rulesVerdict, wordingVerdict } from "../../src/shared/verdicts.ts";
 import { Transcript } from "./Transcript.tsx";
 
 const status = z.enum(["pass", "fail", "review"]);
@@ -11,6 +12,11 @@ const reportSchema = z.object({
   summary: z.object({
     conversations: z.number(),
     repeats: z.number(),
+    runs: z.number(),
+    rulesHeldRuns: z.number(),
+    codeChecksPassed: z.number(),
+    codeChecksTotal: z.number(),
+    wording: z.object({ pass: z.number(), review: z.number(), fail: z.number() }),
     passedEveryRun: z.number(),
     passedPerRun: z.array(z.number()),
     needsReview: z.number(),
@@ -61,11 +67,12 @@ type Status = z.infer<typeof status>;
 const WORD: Record<Status, string> = { pass: "Pass", fail: "Fail", review: "Review" };
 const ICON: Record<Status, typeof Ban> = { pass: CircleCheck, fail: Ban, review: CircleHelp };
 
-function Badge({ s }: { s: Status }) {
+function Badge({ s, label }: { s: Status; label?: string }) {
   const Icon = ICON[s];
   return (
     <span className={`badge ${s}`}>
-      <Icon size={14} aria-hidden="true" /> {WORD[s]}
+      <Icon size={14} aria-hidden="true" /> {label ? `${label}: ` : ""}
+      {WORD[s]}
     </span>
   );
 }
@@ -128,12 +135,20 @@ export function Report({ selected }: { selected: string | undefined }) {
       <main className="report">
         <section className="headline">
           <h1>
-            {s.passedEveryRun}/{s.conversations} conversations passed all {s.repeats} runs
+            Rules held in {s.rulesHeldRuns}/{s.runs} runs
           </h1>
+          <p>
+            {s.codeChecksPassed}/{s.codeChecksTotal} code checks passed: no refund outside the policy, no leaked card
+            number or email, nothing looked up before verification, never two refunds on one charge.
+          </p>
+          <p>
+            <strong>Wording, judged by Jev, per run:</strong> {s.wording.pass} pass, {s.wording.review} need review,{" "}
+            {s.wording.fail} fail. These are tone, false promises and asking the right question, not policy.
+          </p>
           <p className="muted">
-            Per run: {s.passedPerRun.join(" · ")}. Needs review: {s.needsReview}. Checks passed {s.checksPassed}/
-            {s.checksTotal}. Model latency p50 {s.p50Ms} ms, p95 {s.p95Ms} ms. Agent {data.model}, graded by Jev (
-            {data.jev}).
+            Strict score (every check, every run): {s.passedEveryRun}/{s.conversations} conversations. All checks{" "}
+            {s.checksPassed}/{s.checksTotal}. Model latency p50 {s.p50Ms} ms, p95 {s.p95Ms} ms, including rate-limit
+            waits. Agent {data.model}, graded by Jev ({data.jev}).
           </p>
         </section>
         <div className="grid-wrap">
@@ -160,7 +175,10 @@ export function Report({ selected }: { selected: string | undefined }) {
                   <td className="muted">{c.category}</td>
                   {c.runs.map((r) => (
                     <td key={r.repeat}>
-                      <Badge s={r.status} />
+                      <span className="verdicts">
+                        <Badge s={rulesVerdict(r.checks)} label="Rules" />
+                        <Badge s={wordingVerdict(r.checks)} label="Wording" />
+                      </span>
                     </td>
                   ))}
                 </tr>

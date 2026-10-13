@@ -257,3 +257,11 @@ the current conversation from the URL).
 |---|---|
 | Final eval, `gemini-3.5-flash-lite`, 12 × 3, Jev on (`eval/results/`) | code checks 228/228 (same as baseline); card warning 3/3 (baseline 0/3); all checks 298/336 (baseline 295/336); remaining failures are tone only |
 | `pnpm screenshots` (live) | Playground: split refund refused, prompt injection flagged and refused, pasted card redacted and warned, eligible refund issued; report overview, drill-down and mobile, all in `docs/screenshots/` |
+
+## Report: rules vs wording
+
+| File | Case | Proves |
+|---|---|---|
+| `test/shared/verdicts.test.ts` | rules pass only when every code check passes, ignoring Jev checks; wording is fail > review > pass, ignoring code checks | a policy result and a tone result are never mixed into one badge |
+| `test/eval/grade.test.ts` | summary counts runs where the rules held, code checks, and wording verdicts; markdown leads with rules held | the headline says what the score means |
+| `e2e/ui.spec.ts` | report headline reads "Rules held in …" | the screen shows the split |

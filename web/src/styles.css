@@ -635,3 +635,12 @@ h2 {
     padding: 16px 12px 40px;
   }
 }
+.verdicts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+.headline p + p {
+  margin-top: 6px;
+}
