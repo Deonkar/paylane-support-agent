@@ -1,5 +1,6 @@
 import type { GradedRun, Status, Summary } from "./grade.ts";
 import type { Scenario } from "./scenarios.ts";
+import { rulesVerdict, wordingVerdict } from "../shared/verdicts.ts";
 
 export interface Report {
   generatedAt: string;
@@ -37,15 +38,18 @@ export function reportMarkdown(r: Report): string {
     "",
     `Model \`${r.model}\` · Jev ${r.jev} · ${s.conversations} conversations × ${s.repeats} runs · ${r.generatedAt}`,
     "",
-    `**${s.passedEveryRun}/${s.conversations} conversations passed every run.** Per run: ${s.passedPerRun.join(", ")}. ` +
-      `Needs review: ${s.needsReview}. Checks passed: ${s.checksPassed}/${s.checksTotal}. ` +
-      `Model latency p50 ${s.p50Ms} ms, p95 ${s.p95Ms} ms. Average tokens per conversation: ${s.avgTokens}.`,
+    `**Rules held in ${s.rulesHeldRuns}/${s.runs} runs** (${s.codeChecksPassed}/${s.codeChecksTotal} code checks: no out-of-policy refund, no leak, verified first, never two refunds).`,
     "",
-    "| # | Conversation | Type | Runs | Transcript |",
-    "|---|---|---|---|---|",
+    `**Wording, judged by Jev, per run:** ${s.wording.pass} pass, ${s.wording.review} need review, ${s.wording.fail} fail (tone, false promises, asking the right question).`,
+    "",
+    `Strict score, every check in every run: ${s.passedEveryRun}/${s.conversations} conversations. All checks: ${s.checksPassed}/${s.checksTotal}. ` +
+      `Model latency p50 ${s.p50Ms} ms, p95 ${s.p95Ms} ms (includes rate-limit waits). Average tokens per conversation: ${s.avgTokens}.`,
+    "",
+    "| # | Conversation | Type | Rules (per run) | Wording (per run) | Transcript |",
+    "|---|---|---|---|---|---|",
     ...r.scenarios.map(
       (c) =>
-        `| ${c.id} | ${c.title} | ${c.category} | ${c.runs.map((run) => MARK[run.status]).join(" · ")} | [${c.id}](transcripts/${c.id}.md) |`,
+        `| ${c.id} | ${c.title} | ${c.category} | ${c.runs.map((run) => MARK[rulesVerdict(run.checks)]).join(" · ")} | ${c.runs.map((run) => MARK[wordingVerdict(run.checks)]).join(" · ")} | [${c.id}](transcripts/${c.id}.md) |`,
     ),
     "",
     "## Checks that did not pass",

@@ -139,6 +139,11 @@ describe("summarize and report", () => {
 
   it("counts pass-every-run, per-run passes, review and latency", () => {
     expect(summarize(runs)).toMatchObject({
+      runs: 6,
+      rulesHeldRuns: 4,
+      codeChecksPassed: 4,
+      codeChecksTotal: 6,
+      wording: { pass: 6, review: 0, fail: 0 },
       conversations: 3,
       repeats: 2,
       passedEveryRun: 1,
@@ -158,7 +163,9 @@ describe("summarize and report", () => {
       summarize(runs),
     );
     const md = reportMarkdown(report);
-    expect(md).toContain("**1/3 conversations passed every run.**");
+    expect(md).toContain("**Rules held in 4/6 runs** (4/6 code checks");
+    expect(md).toContain("Strict score, every check in every run: 1/3 conversations.");
+    expect(md).toContain("| Rules (per run) | Wording (per run) |");
     expect(md).toContain("02 run 2: ❌ fail **S1**");
     expect(md).toContain("lines 3");
     const t = report.scenarios[0];

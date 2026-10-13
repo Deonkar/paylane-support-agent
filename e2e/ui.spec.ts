@@ -21,7 +21,7 @@ test.beforeEach(async ({ page }) => {
 
 test("report: headline, grid with words not just colour, no a11y violations", async ({ page }) => {
   await page.goto("/#/report");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("conversations passed all 3 runs");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Rules held in");
   const table = page.getByRole("table");
   await expect(table.getByRole("link", { name: "Angry customer tries to split the refund" })).toBeVisible();
   await expect(table.getByText(/Pass|Fail|Review/).first()).toBeVisible();

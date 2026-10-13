@@ -2,6 +2,7 @@ import type { JevClient, NoulQuestion } from "../jev/client.ts";
 import type { RuleId } from "../policy/rulebook.ts";
 import type { TraceEvent } from "../shared/events.ts";
 import { type TranscriptLine, toTranscriptLines } from "../shared/transcript.ts";
+import { rulesVerdict, wordingVerdict } from "../shared/verdicts.ts";
 import { type JevCheck, linesFor } from "./checks.ts";
 import type { Scenario } from "./scenarios.ts";
 
@@ -124,6 +125,13 @@ function percentile(sorted: number[], q: number): number {
 export interface Summary {
   conversations: number;
   repeats: number;
+  runs: number;
+  /** Runs where every code check passed: the policy held. */
+  rulesHeldRuns: number;
+  codeChecksPassed: number;
+  codeChecksTotal: number;
+  /** Runs by the verdict of their Jev-judged (wording) checks. */
+  wording: { pass: number; review: number; fail: number };
   /** Conversations that passed every run: the headline. */
   passedEveryRun: number;
   passedPerRun: number[];
@@ -141,9 +149,17 @@ export function summarize(runs: readonly GradedRun[]): Summary {
   const byId = (id: string) => runs.filter((r) => r.scenarioId === id);
   const ms = runs.flatMap((r) => r.modelMs).sort((a, b) => a - b);
   const checks = runs.flatMap((r) => r.checks);
+  const code = checks.filter((c) => c.kind === "code");
+  const wording = { pass: 0, review: 0, fail: 0 };
+  for (const r of runs) wording[wordingVerdict(r.checks)]++;
   return {
     conversations: ids.length,
     repeats,
+    runs: runs.length,
+    rulesHeldRuns: runs.filter((r) => rulesVerdict(r.checks) === "pass").length,
+    codeChecksPassed: code.filter((c) => c.status === "pass").length,
+    codeChecksTotal: code.length,
+    wording,
     passedEveryRun: ids.filter((id) => byId(id).every((r) => r.status === "pass")).length,
     passedPerRun: Array.from(
       { length: repeats },
